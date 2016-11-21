@@ -17,6 +17,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        let splitViewController = self.window!.rootViewController as! UISplitViewController
+        let leftNavController = splitViewController.viewControllers.first as! UINavigationController
+        let tableViewController = leftNavController.topViewController as! TableViewController
+        let detailNavViewController = splitViewController.viewControllers.last as! UINavigationController
+        let detailViewController = detailNavViewController.topViewController as! DetailViewController
+        
+        
+        
+        //make the detail view after launching corresond to the first weather
+        let firstCity = tableViewController.cities.first
+        detailViewController.city = firstCity
+        
+        //delegate
+        tableViewController.delegate = detailViewController
+
+
+       detailViewController.navigationItem.leftItemsSupplementBackButton = true
+        detailViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
+    
         return true
     }
 
@@ -43,7 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Saves changes in the application's managed object context before the application terminates.
         self.saveContext()
     }
-
+    
+    
     // MARK: - Core Data stack
 
     lazy var applicationDocumentsDirectory: NSURL = {

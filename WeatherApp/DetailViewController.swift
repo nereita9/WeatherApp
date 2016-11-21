@@ -21,9 +21,10 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var nameLabel: UILabel!
     
 
+     let openWeatherMap = OpenWeatherMap()
+    
     
     //necessary because in ipad the tableView is in the same view as the detailview, so it is not enought to update in viewdidload
-    
     var city: City! {
         didSet (newCity){
             
@@ -40,7 +41,9 @@ class DetailViewController: UIViewController {
             temperatureLabel?.text = String(city.temperature)
             weatherLabel?.text = city.weatherDescription
             iconImageView?.image = city.weatherPic
-            
+        
+        
+            openWeatherMap.getWeather(city.name)
             
         
     }

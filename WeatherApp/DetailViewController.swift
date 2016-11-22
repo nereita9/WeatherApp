@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DetailViewController: UIViewController {
+class DetailViewController: UIViewController, OpenWeatherMapDelegate {
    
     //MARK: Properties
     
@@ -20,41 +20,40 @@ class DetailViewController: UIViewController {
     
     @IBOutlet weak var nameLabel: UILabel!
     
-
-     let openWeatherMap = OpenWeatherMap()
     
+    var weather: OpenWeatherMap!
+    var initDelegate = true
     
     //necessary because in ipad the tableView is in the same view as the detailview, so it is not enought to update in viewdidload
     var city: City! {
         didSet (newCity){
             
-        
-
+            if initDelegate == true{
+                weather = OpenWeatherMap(delegate: self)
+                initDelegate = false
+            }
                 self.refreshUI()
             
         }
     }
     
     func refreshUI(){
+    
         
-            nameLabel?.text = city.name
-            temperatureLabel?.text = String(city.temperature)
-            weatherLabel?.text = city.weatherDescription
-            iconImageView?.image = city.weatherPic
-        
-        
-            openWeatherMap.getWeather(city.name)
-            
+        weather.getWeather(city.name)
         
     }
     
-
-    
+    //Actions
+    @IBAction func refreshData(sender: UIBarButtonItem) {
+        refreshUI()
+        //print("refreshing")
+    }
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+       
         refreshUI()
     
         
@@ -79,6 +78,42 @@ class DetailViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    
+    
+    // MARK: WeatherGetterDelegate methods
+    // -----------------------------------
+    
+    func didGetWeather(city: City) {
+        // This method is called asynchronously, which means it won't execute in the main queue.
+        // ALl UI code needs to execute in the main queue, which is why we're wrapping the code
+        // that updates all the labels in a dispatch_async() call.
+        dispatch_async(dispatch_get_main_queue()) {
+            self.nameLabel?.text = city.name
+            self.temperatureLabel?.text = String(city.temperature!)+" ºC"
+            self.weatherLabel?.text = city.weather!.capitalizedString
+            self.iconImageView?.image = city.weatherPic!
+        }
+    }
+    
+    func didNotGetWeather(error: NSError) {
+        // This method is called asynchronously, which means it won't execute in the main queue.
+        // ALl UI code needs to execute in the main queue, which is why we're wrapping the call
+        // to showSimpleAlert(title:message:) in a dispatch_async() call.
+        dispatch_async(dispatch_get_main_queue()) {
+           
+            let alertVC = UIAlertController(title: "Can't get the weather", message: "The weather service isn't responding.", preferredStyle: .Alert)
+            
+        
+            alertVC.view.layoutIfNeeded() //avoid warning: snapshotting a view taht has not been rendered.....
+            
+            self.presentViewController(alertVC, animated: true, completion: nil)
+
+            
+            
+        }
+        print("didNotGetWeather error: \(error)")
+    }
     
 
 

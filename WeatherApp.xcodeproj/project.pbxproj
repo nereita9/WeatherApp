@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CB9664D61DE44AD10069B12C /* OpenWeatherMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9664D51DE44AD10069B12C /* OpenWeatherMap.swift */; };
 		CB98DDB51DDB4A0E00C80E27 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB98DDB41DDB4A0E00C80E27 /* AppDelegate.swift */; };
 		CB98DDBD1DDB4A0E00C80E27 /* WeatherApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CB98DDBB1DDB4A0E00C80E27 /* WeatherApp.xcdatamodeld */; };
 		CB98DDBF1DDB4A0E00C80E27 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB98DDBE1DDB4A0E00C80E27 /* Assets.xcassets */; };
@@ -18,7 +19,6 @@
 		CB98DDEA1DDB535800C80E27 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB98DDE91DDB535800C80E27 /* City.swift */; };
 		CB9E94071DDC930A00F643E0 /* CityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9E94061DDC930A00F643E0 /* CityTableViewCell.swift */; };
 		CB9E940A1DDCB5A000F643E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB9E94081DDCB5A000F643E0 /* Main.storyboard */; };
-		CBE406291DE3340700380649 /* OpenWeatherMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBE406281DE3340700380649 /* OpenWeatherMap.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CB9664D51DE44AD10069B12C /* OpenWeatherMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenWeatherMap.swift; sourceTree = "<group>"; };
 		CB98DDB11DDB4A0E00C80E27 /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB98DDB41DDB4A0E00C80E27 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CB98DDBC1DDB4A0E00C80E27 /* WeatherApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WeatherApp.xcdatamodel; sourceTree = "<group>"; };
@@ -56,7 +57,6 @@
 		CB98DDE91DDB535800C80E27 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		CB9E94061DDC930A00F643E0 /* CityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityTableViewCell.swift; sourceTree = "<group>"; };
 		CB9E94091DDCB5A000F643E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		CBE406281DE3340700380649 /* OpenWeatherMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OpenWeatherMap.swift; path = ../OpenWeatherMap.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,7 +112,7 @@
 				CB98DDE51DDB4CE100C80E27 /* TableViewController.swift */,
 				CB9E94061DDC930A00F643E0 /* CityTableViewCell.swift */,
 				CB98DDE71DDB4E1200C80E27 /* DetailViewController.swift */,
-				CBE406281DE3340700380649 /* OpenWeatherMap.swift */,
+				CB9664D51DE44AD10069B12C /* OpenWeatherMap.swift */,
 				CB9E94081DDCB5A000F643E0 /* Main.storyboard */,
 				CB98DDBE1DDB4A0E00C80E27 /* Assets.xcassets */,
 				CB98DDC01DDB4A0E00C80E27 /* LaunchScreen.storyboard */,
@@ -276,9 +276,9 @@
 				CB98DDBD1DDB4A0E00C80E27 /* WeatherApp.xcdatamodeld in Sources */,
 				CB98DDE81DDB4E1200C80E27 /* DetailViewController.swift in Sources */,
 				CB98DDB51DDB4A0E00C80E27 /* AppDelegate.swift in Sources */,
-				CBE406291DE3340700380649 /* OpenWeatherMap.swift in Sources */,
 				CB98DDEA1DDB535800C80E27 /* City.swift in Sources */,
 				CB98DDE61DDB4CE100C80E27 /* TableViewController.swift in Sources */,
+				CB9664D61DE44AD10069B12C /* OpenWeatherMap.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

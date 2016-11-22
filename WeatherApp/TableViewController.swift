@@ -27,16 +27,18 @@ class TableViewController: UITableViewController {
         //load any saved meals, otherwise load sample data
         if let savedCities = loadCities() {
             cities+=savedCities
+            
         }
         else {
             loadSampleCities()
+            //mas adelante pondremos que ponga la ciudad mas cercana
         }
     }
     
     func loadSampleCities(){
         
-        self.cities.append(City(name:"Paris", temperature: 20, weather: 0))
-        self.cities.append(City(name:"Madrid", temperature: 30, weather: 1))
+        self.cities.append(City(name:"Paris"))
+        self.cities.append(City(name:"Madrid"))
     }
 
     override func viewDidLoad() {
@@ -102,9 +104,21 @@ class TableViewController: UITableViewController {
         self.delegate?.citySelected(selectedCity)
         if let detailViewController = self.delegate as? DetailViewController {
             
-            //MARK:super important
-            //show the detailviewcontroller nstead of the navigation controller to avoid the size classes variation probles
-            splitViewController?.showDetailViewController(detailViewController, sender: nil)
+            
+            if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) || (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().nativeBounds.height == 2208 ) ){
+                
+                
+                //&& (UIDevice.currentDevice().orientation == .LandscapeLeft || UIDevice.currentDevice().orientation == .LandscapeRight)
+                
+               // print("ipad or iphone 6 plus")
+                splitViewController?.showDetailViewController(detailViewController.navigationController!, sender: nil)
+            }
+            else {
+                //MARK:super important
+                //show the detailviewcontroller nstead of the navigation controller to avoid the size classes variation probles
+                //print("iphone")
+                splitViewController?.showDetailViewController(detailViewController, sender: nil)
+            }
         }
         
 

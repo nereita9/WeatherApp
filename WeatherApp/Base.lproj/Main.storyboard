@@ -34,9 +34,11 @@
                                 <variation key="widthClass=regular">
                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 </variation>
-                                <variation key="heightClass=compact-widthClass=compact" misplaced="YES">
+                                <variation key="heightClass=compact-widthClass=compact">
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <rect key="frame" x="315" y="68" width="65" height="44"/>
+                                </variation>
+                                <variation key="heightClass=compact-widthClass=regular" misplaced="YES">
+                                    <rect key="frame" x="690" y="8" width="90" height="44"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=regular">
                                     <fontDescription key="fontDescription" type="system" pointSize="34"/>
@@ -86,9 +88,11 @@
                                 <variation key="widthClass=regular">
                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 </variation>
-                                <variation key="heightClass=compact-widthClass=compact" misplaced="YES">
+                                <variation key="heightClass=compact-widthClass=compact">
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <rect key="frame" x="335" y="224" width="45" height="44"/>
+                                </variation>
+                                <variation key="heightClass=compact-widthClass=regular" misplaced="YES">
+                                    <rect key="frame" x="716" y="284" width="64" height="44"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=regular">
                                     <fontDescription key="fontDescription" type="system" pointSize="34"/>
@@ -102,8 +106,8 @@
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="O1x-ar-iLJ" secondAttribute="height" multiplier="1:1" id="I83-zh-IHZ"/>
                                 </constraints>
-                                <variation key="heightClass=compact-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="20" y="68" width="200" height="200"/>
+                                <variation key="heightClass=compact-widthClass=regular" misplaced="YES">
+                                    <rect key="frame" x="20" y="8" width="320" height="320"/>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                     <rect key="frame" x="34" y="8" width="332" height="331"/>
@@ -114,9 +118,10 @@
                         <constraints>
                             <constraint firstItem="ZJa-37-jUB" firstAttribute="top" secondItem="O1x-ar-iLJ" secondAttribute="bottom" constant="20" id="3e2-a7-TZN"/>
                             <constraint firstItem="EVe-Gs-drd" firstAttribute="centerY" secondItem="O1x-ar-iLJ" secondAttribute="centerY" id="4tq-7S-BPg"/>
-                            <constraint firstItem="O1x-ar-iLJ" firstAttribute="width" secondItem="j1a-fU-TQ8" secondAttribute="width" multiplier="0.4" id="AiS-dF-Gqa"/>
                             <constraint firstItem="O1x-ar-iLJ" firstAttribute="centerY" secondItem="j1a-fU-TQ8" secondAttribute="centerY" id="Bg4-vP-AOf"/>
-                            <constraint firstItem="O1x-ar-iLJ" firstAttribute="width" secondItem="j1a-fU-TQ8" secondAttribute="width" multiplier="0.6" id="IAH-ae-TwX"/>
+                            <constraint firstItem="O1x-ar-iLJ" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="y2l-4a-GRK" secondAttribute="top" constant="8" id="Gku-ms-fIp"/>
+                            <constraint firstItem="O1x-ar-iLJ" firstAttribute="width" relation="lessThanOrEqual" secondItem="j1a-fU-TQ8" secondAttribute="width" multiplier="0.6" id="IAH-ae-TwX"/>
+                            <constraint firstItem="5Uw-P2-PBR" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="O1x-ar-iLJ" secondAttribute="top" constant="8" id="J6J-ka-O6w"/>
                             <constraint firstItem="O1x-ar-iLJ" firstAttribute="leading" secondItem="j1a-fU-TQ8" secondAttribute="leadingMargin" id="Jay-Y7-0bZ">
                                 <variation key="heightClass=compact" constant="0.0"/>
                                 <variation key="heightClass=compact-widthClass=regular" constant="0.0"/>
@@ -128,7 +133,6 @@
                             <constraint firstItem="ZJa-37-jUB" firstAttribute="trailing" secondItem="O1x-ar-iLJ" secondAttribute="trailing" id="MkD-GE-3VW"/>
                             <constraint firstAttribute="trailingMargin" secondItem="EVe-Gs-drd" secondAttribute="trailing" id="SQP-iM-XdZ"/>
                             <constraint firstItem="EVe-Gs-drd" firstAttribute="top" secondItem="O1x-ar-iLJ" secondAttribute="bottom" constant="22" id="TKh-H6-zDx"/>
-                            <constraint firstItem="O1x-ar-iLJ" firstAttribute="width" secondItem="j1a-fU-TQ8" secondAttribute="width" multiplier="0.5" id="Vxz-7K-3UR"/>
                             <constraint firstItem="O1x-ar-iLJ" firstAttribute="top" secondItem="5Uw-P2-PBR" secondAttribute="bottom" constant="8" id="bn7-3v-BTw">
                                 <variation key="heightClass=compact-widthClass=compact" constant="35"/>
                             </constraint>
@@ -143,12 +147,12 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="AiS-dF-Gqa"/>
                                 <exclude reference="Bg4-vP-AOf"/>
                                 <exclude reference="IAH-ae-TwX"/>
+                                <exclude reference="J6J-ka-O6w"/>
                                 <exclude reference="Jay-Y7-0bZ"/>
-                                <exclude reference="Vxz-7K-3UR"/>
                                 <exclude reference="tVF-Q1-AqO"/>
+                                <exclude reference="Gku-ms-fIp"/>
                                 <exclude reference="4tq-7S-BPg"/>
                                 <exclude reference="SQP-iM-XdZ"/>
                                 <exclude reference="jLX-qI-KrH"/>
@@ -160,12 +164,13 @@
                         <variation key="heightClass=compact">
                             <mask key="constraints">
                                 <include reference="Bg4-vP-AOf"/>
-                                <exclude reference="IAH-ae-TwX"/>
+                                <include reference="IAH-ae-TwX"/>
+                                <include reference="J6J-ka-O6w"/>
                                 <include reference="Jay-Y7-0bZ"/>
                                 <exclude reference="LV8-qx-9vY"/>
-                                <include reference="Vxz-7K-3UR"/>
                                 <exclude reference="bn7-3v-BTw"/>
                                 <exclude reference="knN-C8-AEJ"/>
+                                <include reference="Gku-ms-fIp"/>
                                 <exclude reference="ehV-DO-4B6"/>
                                 <include reference="4tq-7S-BPg"/>
                                 <include reference="SQP-iM-XdZ"/>
@@ -195,18 +200,15 @@
                             <mask key="constraints">
                                 <include reference="Bg4-vP-AOf"/>
                                 <include reference="IAH-ae-TwX"/>
-                                <exclude reference="Vxz-7K-3UR"/>
                                 <include reference="jLX-qI-KrH"/>
                                 <include reference="LbP-A8-8BI"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact-widthClass=regular">
                             <mask key="constraints">
-                                <include reference="AiS-dF-Gqa"/>
-                                <exclude reference="IAH-ae-TwX"/>
+                                <include reference="IAH-ae-TwX"/>
                                 <include reference="Jay-Y7-0bZ"/>
                                 <exclude reference="LV8-qx-9vY"/>
-                                <exclude reference="Vxz-7K-3UR"/>
                                 <exclude reference="knN-C8-AEJ"/>
                                 <exclude reference="uYq-pW-rJT"/>
                                 <exclude reference="MkD-GE-3VW"/>
@@ -250,7 +252,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="BYm-l9-wkD" rowHeight="90" style="IBUITableViewCellStyleDefault" id="QGR-LJ-fQY" customClass="CityTableViewCell" customModule="WeatherApp" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" textLabel="BYm-l9-wkD" rowHeight="90" style="IBUITableViewCellStyleDefault" id="QGR-LJ-fQY" customClass="CityTableViewCell" customModule="WeatherApp" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="92" width="600" height="90"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="QGR-LJ-fQY" id="Clt-1z-PdR">

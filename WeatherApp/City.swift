@@ -6,6 +6,7 @@
 //  Copyright © 2016 Nerea Gonzalez Vazquez. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
 class City: NSObject, NSCoding {
@@ -57,7 +58,9 @@ class City: NSObject, NSCoding {
         let exactTemperature = (mainDictionary["temp"] as! Double) - 273.15 //in celsius
         self.temperature = round(exactTemperature*10)/10 // only temperature with one decimal
         
-        let weatherDictionary = weatherData["weather"]![0] as! [String: AnyObject]
+        let weatherArray = weatherData["weather"] as! [[String: AnyObject]]
+        let weatherDictionary = weatherArray[0]
+        
         self.weather = weatherDictionary["description"] as? String
         self.weatherIconID = weatherDictionary["icon"] as? String
         //preguntarlo cada vez en vez de guardarlo????

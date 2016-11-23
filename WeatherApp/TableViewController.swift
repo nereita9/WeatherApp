@@ -15,6 +15,8 @@ protocol CitySelectionDelegate: class {
 
 class TableViewController: UITableViewController {
     
+    var currentSelectedIndexPath: NSIndexPath?
+    
     var cities = [City]()
     
     weak var delegate: CitySelectionDelegate?
@@ -26,8 +28,16 @@ class TableViewController: UITableViewController {
         
         //load any saved meals, otherwise load sample data
         if let savedCities = loadCities() {
-            cities+=savedCities
             
+            if savedCities.count > 0 {
+                 cities+=savedCities
+            }
+           
+            else {
+                loadMainCity()
+            }
+            
+
         }
         else {
             loadSampleCities()
@@ -41,6 +51,26 @@ class TableViewController: UITableViewController {
         self.cities.append(City(name:"Madrid"))
     }
 
+    func loadMainCity(){
+        self.cities.append(City(name:"Boulogne-Billancourt"))
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        
+        //tableview is not ready at viewdidload
+        
+        //if there is at least one city saved each time the table appears we mark the last cell the user selected
+        if self.cities.first != nil{
+            //the first row is the last city selected as in cellForRowAtIndexPath we configure the selected cell to go on top
+            currentSelectedIndexPath = NSIndexPath(forRow: 0, inSection: 0)
+            tableView.selectRowAtIndexPath(currentSelectedIndexPath, animated: true, scrollPosition: .Top)
+            //let firstSelectedCell = tableView.cellForRowAtIndexPath(currentSelectedIndexPath!)! as UITableViewCell
+            //firstSelectedCell.backgroundColor = UIColor.blueColor()
+        }
+        
+
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -51,7 +81,7 @@ class TableViewController: UITableViewController {
         //add button in the navigation bar
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(insertNewCity(_:)))
         self.navigationItem.rightBarButtonItem = addButton
-
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -92,18 +122,33 @@ class TableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-
+        
         // Configure the cell...
         let city = self.cities[indexPath.row]
         cell.textLabel?.text = city.name
+        
+        //this will make the scroll begin in the top
+        tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Top, animated: true)
+        
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let selectedCity = self.cities[indexPath.row]
+        
+        //move selected cell to the top, and selected city as first element of cities
+        tableView.moveRowAtIndexPath(indexPath, toIndexPath: NSIndexPath(forRow: 0, inSection: 0) )
+        
+        self.cities.removeAtIndex(indexPath.row)
+        self.cities.insert(selectedCity, atIndex: 0)
+        
+
+        
         self.delegate?.citySelected(selectedCity)
         if let detailViewController = self.delegate as? DetailViewController {
             
+          
+
             
             if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) || (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().nativeBounds.height == 2208 ) ){
                 
@@ -111,7 +156,29 @@ class TableViewController: UITableViewController {
                 //&& (UIDevice.currentDevice().orientation == .LandscapeLeft || UIDevice.currentDevice().orientation == .LandscapeRight)
                 
                // print("ipad or iphone 6 plus")
-                splitViewController?.showDetailViewController(detailViewController.navigationController!, sender: nil)
+                
+                splitViewController?.showDetailViewController(detailViewController.navigationController!,sender: nil)
+                
+                
+                //hide master view (table view) when clicking. In ipad portrait
+                if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) && (UIDevice.currentDevice().orientation == .Portrait || UIDevice.currentDevice().orientation == .PortraitUpsideDown)){
+                    
+                    
+                    
+                    UIView.animateWithDuration(0.3, animations: {
+                        self.splitViewController?.preferredDisplayMode = .PrimaryHidden
+                    }, completion: { finished in
+                        //restore
+                        self.splitViewController?.preferredDisplayMode = .Automatic
+                    })
+                    
+                    
+                    
+
+
+                }
+                
+                
             }
             else {
                 //MARK:super important

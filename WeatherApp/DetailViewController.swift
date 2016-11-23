@@ -32,8 +32,8 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
                 weather = OpenWeatherMap(delegate: self)
                 initDelegate = false
             }
-                self.refreshUI()
             
+                self.refreshUI()
         }
     }
     
@@ -54,8 +54,10 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        refreshUI()
-    
+        //if there are already a city asigned, in case table view empty no city asgned (it may happen)!!!
+        if city != nil {
+            refreshUI()
+        }
         
 
         // Do any additional setup after loading the view.
@@ -104,8 +106,10 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
            
             let alertVC = UIAlertController(title: "Can't get the weather", message: "The weather service isn't responding.", preferredStyle: .Alert)
             
-        
-            alertVC.view.layoutIfNeeded() //avoid warning: snapshotting a view taht has not been rendered.....
+            
+            let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            
+            alertVC.addAction(okAction)
             
             self.presentViewController(alertVC, animated: true, completion: nil)
 
@@ -113,6 +117,10 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
             
         }
         print("didNotGetWeather error: \(error)")
+    }
+    
+    func alertControllerBackgroundTapped() {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
 

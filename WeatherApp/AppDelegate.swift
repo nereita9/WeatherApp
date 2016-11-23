@@ -8,9 +8,11 @@
 
 import UIKit
 import CoreData
+//import HockeySDK
+
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
     var window: UIWindow?
 
@@ -23,19 +25,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let detailNavViewController = splitViewController.viewControllers.last as! UINavigationController
         let detailViewController = detailNavViewController.topViewController as! DetailViewController
         
+        //splitViewController.preferredDisplayMode = .PrimaryOverlay
         
         
         //make the detail view after launching corresond to the first weather
+        
+        
+        
         let firstCity = tableViewController.cities.first
-        detailViewController.city = firstCity
+        if firstCity != nil {
+            detailViewController.city = firstCity
+
+        }
+      
         
         //delegate
         tableViewController.delegate = detailViewController
-
+        
+        splitViewController.delegate = self
 
        detailViewController.navigationItem.leftItemsSupplementBackButton = true
         detailViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
     
+        //let sharedHockeyManager = BITHockeyManager.sharedHockeyManager()
+        //sharedHockeyManager.configureWithIdentifier("825b9cddc9974e86b6f97df3ba7e2230")
+        //sharedHockeyManager.startManager()
+        //sharedHockeyManager.authenticator.authenticateInstallation()
+
+        
+        
         return true
     }
 
@@ -63,6 +81,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.saveContext()
     }
     
+    //MARK: split view controller
+    
+    //make master shows first when no cities (in case that may happen)
+    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
+        if let secondaryAsNavController = secondaryViewController as? UINavigationController {
+            if let topAsDetailController = secondaryAsNavController.topViewController as? DetailViewController {
+                if topAsDetailController.city == nil {
+                    return true
+                }
+            }
+        }
+        return false
+    }
     
     // MARK: - Core Data stack
 

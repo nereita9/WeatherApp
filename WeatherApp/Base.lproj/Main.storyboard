@@ -147,12 +147,12 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="Bg4-vP-AOf"/>
-                                <exclude reference="IAH-ae-TwX"/>
                                 <exclude reference="J6J-ka-O6w"/>
+                                <exclude reference="Bg4-vP-AOf"/>
+                                <exclude reference="Gku-ms-fIp"/>
+                                <exclude reference="IAH-ae-TwX"/>
                                 <exclude reference="Jay-Y7-0bZ"/>
                                 <exclude reference="tVF-Q1-AqO"/>
-                                <exclude reference="Gku-ms-fIp"/>
                                 <exclude reference="4tq-7S-BPg"/>
                                 <exclude reference="SQP-iM-XdZ"/>
                                 <exclude reference="jLX-qI-KrH"/>
@@ -163,15 +163,14 @@
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
-                                <include reference="Bg4-vP-AOf"/>
-                                <include reference="IAH-ae-TwX"/>
                                 <include reference="J6J-ka-O6w"/>
+                                <include reference="Bg4-vP-AOf"/>
+                                <include reference="Gku-ms-fIp"/>
+                                <include reference="IAH-ae-TwX"/>
                                 <include reference="Jay-Y7-0bZ"/>
                                 <exclude reference="LV8-qx-9vY"/>
                                 <exclude reference="bn7-3v-BTw"/>
                                 <exclude reference="knN-C8-AEJ"/>
-                                <include reference="Gku-ms-fIp"/>
-                                <exclude reference="ehV-DO-4B6"/>
                                 <include reference="4tq-7S-BPg"/>
                                 <include reference="SQP-iM-XdZ"/>
                                 <exclude reference="TKh-H6-zDx"/>
@@ -180,6 +179,7 @@
                                 <exclude reference="MkD-GE-3VW"/>
                                 <include reference="jLX-qI-KrH"/>
                                 <include reference="rOx-wv-Wah"/>
+                                <exclude reference="ehV-DO-4B6"/>
                                 <include reference="LbP-A8-8BI"/>
                                 <include reference="iBE-gX-fLY"/>
                                 <exclude reference="zrl-Vf-b5x"/>
@@ -275,11 +275,59 @@
                             <outlet property="delegate" destination="JTt-db-htu" id="6xU-oO-CgD"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Favorites" id="rXf-p1-7W9"/>
+                    <navigationItem key="navigationItem" title="Favorites" id="rXf-p1-7W9">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="iQk-Y0-haV">
+                            <connections>
+                                <segue destination="43e-6y-tUc" kind="presentation" modalPresentationStyle="fullScreen" modalTransitionStyle="flipHorizontal" id="9OC-ij-EUC"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="addButton" destination="iQk-Y0-haV" id="cl0-M4-urJ"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wRw-eG-m0S" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1387" y="14"/>
+            <point key="canvasLocation" x="1377" y="20"/>
+        </scene>
+        <!--Map View Controller-->
+        <scene sceneID="m74-UI-gvD">
+            <objects>
+                <viewController id="mmA-Mw-24d" userLabel="Map View Controller" customClass="MapViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gQO-Gd-2vQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="JJA-DM-WhS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Qkr-71-AVh">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="b4A-0r-zCa">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="b4A-0r-zCa" secondAttribute="trailing" constant="-20" id="JIp-jz-M2d"/>
+                            <constraint firstItem="b4A-0r-zCa" firstAttribute="leading" secondItem="Qkr-71-AVh" secondAttribute="leadingMargin" constant="-20" id="V2v-ya-QPG"/>
+                            <constraint firstItem="JJA-DM-WhS" firstAttribute="top" secondItem="b4A-0r-zCa" secondAttribute="bottom" id="cpl-TJ-dNK"/>
+                            <constraint firstItem="b4A-0r-zCa" firstAttribute="top" secondItem="gQO-Gd-2vQ" secondAttribute="bottom" id="zcV-AM-Oju"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Maps" id="kK9-wS-ZVg">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="wda-mc-oJ1">
+                            <connections>
+                                <action selector="mapsCancel:" destination="mmA-Mw-24d" id="o5Q-gp-n6k"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="mapView" destination="b4A-0r-zCa" id="Hlf-Oa-r5p"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0nc-9M-2Ih" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2853" y="-742"/>
         </scene>
         <!--Favorites-->
         <scene sceneID="JI0-Os-Adg">
@@ -327,6 +375,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UuT-B4-PMO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="545" y="817"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="HEB-TG-CqT">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="43e-6y-tUc" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="C4q-Mo-xsK">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="mmA-Mw-24d" kind="relationship" relationship="rootViewController" id="vga-jw-ieJ"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JE2-0g-etF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2095" y="-742"/>
         </scene>
     </scenes>
     <resources>

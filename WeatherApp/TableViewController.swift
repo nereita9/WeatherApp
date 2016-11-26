@@ -7,19 +7,67 @@
 //
 
 import UIKit
+import CoreLocation
 
 
 protocol CitySelectionDelegate: class {
     func citySelected(newCity: City)
 }
 
-class TableViewController: UITableViewController {
+class TableViewController: UITableViewController, CLLocationManagerDelegate {
+    
+   
     
     var currentSelectedIndexPath: NSIndexPath?
     
     var cities = [City]()
     
+    
+    var city: City! {
+        didSet (newCity){
+            
+            self.refreshTable()
+        }
+    }
+    
+    func refreshTable(){
+        
+        self.cities.insert(city, atIndex: 0)
+        
+        tableView.reloadData()
+        //save cities in MEM
+        saveCities()
+    }
+    
+
+
+    
     weak var delegate: CitySelectionDelegate?
+    
+    let locationManager = CLLocationManager()
+    
+    var weather: OpenWeatherMap!
+    
+    @IBOutlet weak var addButton: UIBarButtonItem!
+    
+    
+    //MARK: Actions
+    
+    /*@IBAction func showMapView(sender: UIBarButtonItem) {
+        mapViewController.delegate = self
+        self.navigationController?.pushViewController(mapViewController, animated: true)
+    }*/
+    
+    
+    //MARK: Navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if sender === addButton {
+        
+            let mapNavViewController = segue.destinationViewController as! UINavigationController
+            let mapViewController = mapNavViewController.topViewController as! MapViewController
+            mapViewController.delegate = self
+        }
+    }
     
     //this willbe loaded from a storyboard
     required init?(coder aDecoder: NSCoder) {
@@ -31,18 +79,22 @@ class TableViewController: UITableViewController {
             
             if savedCities.count > 0 {
                  cities+=savedCities
+                
             }
-           
             else {
-                loadMainCity()
+                
+                getLocation()
             }
+        }
+            
+        else {
+            
+            getLocation()
+        }
             
 
-        }
-        else {
-            loadSampleCities()
-            //mas adelante pondremos que ponga la ciudad mas cercana
-        }
+        
+        
     }
     
     func loadSampleCities(){
@@ -51,12 +103,18 @@ class TableViewController: UITableViewController {
         self.cities.append(City(name:"Madrid"))
     }
 
-    func loadMainCity(){
-        self.cities.append(City(name:"Boulogne-Billancourt"))
+    func setDefaultCity(){
+        //put Paris in case of no location
+        self.cities.append(City(name:"Paris"))
+        self.delegate?.citySelected(self.cities.first!)
+        
     }
     
+    
+    
+    
     override func viewWillAppear(animated: Bool) {
-        
+        super.viewWillAppear(animated)
         //tableview is not ready at viewdidload
         
         //if there is at least one city saved each time the table appears we mark the last cell the user selected
@@ -78,30 +136,11 @@ class TableViewController: UITableViewController {
         // editbutton in the navigation bar for deleting
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
         
-        //add button in the navigation bar
-        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(insertNewCity(_:)))
-        self.navigationItem.rightBarButtonItem = addButton
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
     
-    func insertNewCity(sender: AnyObject?)
-    {
-        print("insert new city")
-        // .....
-        //... google maps
-        //...
-        
-        //cities.append(newCity)
-        
-        //  //save Cities in MEM
-        //saveCities()
-    }
+
     
     
     override func didReceiveMemoryWarning() {
@@ -163,8 +202,7 @@ class TableViewController: UITableViewController {
                 //hide master view (table view) when clicking. In ipad portrait
                 if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) && (UIDevice.currentDevice().orientation == .Portrait || UIDevice.currentDevice().orientation == .PortraitUpsideDown)){
                     
-                    
-                    
+                                       
                     UIView.animateWithDuration(0.3, animations: {
                         self.splitViewController?.preferredDisplayMode = .PrimaryHidden
                     }, completion: { finished in
@@ -253,6 +291,113 @@ class TableViewController: UITableViewController {
         }
     }*/
     
+    //MARK: CLLocationManager
+    func getLocation() {
+        guard CLLocationManager.locationServicesEnabled() else {
+            
+            let alertVC = UIAlertController(title: "Location services are disabled on your device", message: "In order to use ths app, go to Settings → Privacy → Location Services and turn location services on.", preferredStyle: .Alert)
+            let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+            alertVC.addAction(okAction)
+            self.presentViewController(alertVC, animated: true, completion: nil)
+            
+            //if location failed, setdefault city Paris
+            setDefaultCity()
+            return
+        }
+        
+        let authStatus = CLLocationManager.authorizationStatus()
+        guard authStatus == .AuthorizedWhenInUse else {
+            switch authStatus {
+            case .Denied, .Restricted:
+                
+                let alertVC = UIAlertController(title: "This app is not authorized to use your location.", message: "In order to use this app, go to Settings → WeatherApp → Location and select the \"While Using the App\" setting.", preferredStyle: .Alert)
+                let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                alertVC.addAction(okAction)
+                self.presentViewController(alertVC, animated: true, completion: nil)
+                
+            case .NotDetermined:
+                locationManager.requestWhenInUseAuthorization()
+                
+            default:
+                print("Oops! This case should never be reached.")
+                
+            }
+            //if location failed, setdefault city Paris
+          
+            setDefaultCity()
+            return
+        }
+        
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+    }
+    
+    // MARK: - CLLocationManagerDelegate methods
+    
+    // This is called if:
+    // - the location manager is updating, and
+    // - it was able to get the user's location.
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+       
+        let location = locations.last!
+        print("location")
+        saveCityByCoordinates(location)
+            
+        
+      
+    }
+    
+    var notify = true
+    // This is called if:
+    // - the location manager is updating, and
+    // - it WASN'T able to get the user's location.
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
+        
+        // This method is called asynchronously, which means it won't execute in the main queue.
+        // All UI code needs to execute in the main queue, which is why we're wrapping the call
+        
+        //it enters here several times and problems comes, we want to avoid that
+        if notify == true {
+        
+            dispatch_async(dispatch_get_main_queue()) {
+                let alertVC = UIAlertController(title: "Can't determine your location", message: "The GPS and other location services aren't responding.", preferredStyle: .Alert)
+                let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                alertVC.addAction(okAction)
+                self.presentViewController(alertVC, animated: true, completion: nil)
+        
+                //if location failed, setdefault city Paris
+                self.setDefaultCity()
+                print("set default city")
+            }
+            notify = false
+        }
+    }
+    
+    
+    func saveCityByCoordinates(location: CLLocation) {
+        let geoCoder = CLGeocoder()
+        geoCoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
+            
+            // Place details
+            var placeMark: CLPlacemark!
+            placeMark = placemarks?[0]
+            
+            
+            // City
+            if let myCity = placeMark.addressDictionary!["City"] as? NSString {
+                print(myCity)
+                self.cities.append(City(name: String(myCity)))
+                self.delegate?.citySelected(self.cities.first!)
+            }
+            
+
+           
+            
+        })
+
+    }
+
     
     //MARK: NSCoding
     func saveCities() {
@@ -267,6 +412,16 @@ class TableViewController: UITableViewController {
     func setOverrideTraitCollection(collection: UITraitCollection?, forChildViewController childViewController: UIViewController) {
         childViewController.class
     }
-  */  
-
+  */
+    
 }
+
+extension TableViewController: CityAdditionDelegate{
+    func cityAddition(newCity: City) {
+        
+        self.city = newCity
+    }
+}
+
+
+

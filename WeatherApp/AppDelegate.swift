@@ -12,7 +12,7 @@ import CoreData
 
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate{
 
     var window: UIWindow?
 
@@ -26,10 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let detailViewController = detailNavViewController.topViewController as! DetailViewController
         
         //splitViewController.preferredDisplayMode = .PrimaryOverlay
-        
+       
         
         //make the detail view after launching corresond to the first weather
-        
         
         
         let firstCity = tableViewController.cities.first
@@ -41,8 +40,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         //delegate
         tableViewController.delegate = detailViewController
+        //get ma controller from itr id
         
-        splitViewController.delegate = self
+       
+        
+        //let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        //let mapViewController = storyboard.instantiateViewControllerWithIdentifier("mapController") as! MapViewController
+
 
        detailViewController.navigationItem.leftItemsSupplementBackButton = true
         detailViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
@@ -73,6 +77,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        print("active")
+        
+        
     }
 
     func applicationWillTerminate(application: UIApplication) {
@@ -81,20 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         self.saveContext()
     }
     
-    //MARK: split view controller
-    
-    //make master shows first when no cities (in case that may happen)
-    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
-        if let secondaryAsNavController = secondaryViewController as? UINavigationController {
-            if let topAsDetailController = secondaryAsNavController.topViewController as? DetailViewController {
-                if topAsDetailController.city == nil {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-    
+        
     // MARK: - Core Data stack
 
     lazy var applicationDocumentsDirectory: NSURL = {

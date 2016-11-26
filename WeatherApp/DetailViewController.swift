@@ -40,8 +40,8 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
     func refreshUI(){
     
         
-        weather.getWeather(city.name)
-        
+        weather.getWeatherByCity(city.name)
+        print("UI refreshed")
     }
     
     //Actions
@@ -49,17 +49,26 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
         refreshUI()
         //print("refreshing")
     }
-
+    
+    func applicationDidBecomeActive(notification: NSNotification) {
+        if self.city != nil {
+            self.refreshUI()
+        }
+        print("refreshing after passing from background to active")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
+        //observe when the application opens from background
+        NSNotificationCenter.defaultCenter().addObserver(
+            self, selector: #selector(self.applicationDidBecomeActive(_:)), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        
         //if there are already a city asigned, in case table view empty no city asgned (it may happen)!!!
         if city != nil {
             refreshUI()
         }
         
-
         // Do any additional setup after loading the view.
     }
     

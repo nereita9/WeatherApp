@@ -24,27 +24,50 @@ protocol OpenWeatherMapDelegate {
     func didNotGetWeather(error: NSError)
 }
 
+protocol OpenWeatherMapStationsDelegate {
+    func didGetStations(stations: [String: AnyObject])
+    func didNotGetStations(error: NSError)
+}
+
 
 class OpenWeatherMap {
     
-    private let baseURL = "http://api.openweathermap.org/data/2.5/weather"
+    private let baseURL = "http://api.openweathermap.org/data/2.5"
     private let myAPIKey = "4f6be5acd631049880c0b7b3c8c6c07b"
     
-    private var delegate:  OpenWeatherMapDelegate
+    private var delegate:  OpenWeatherMapDelegate!
     
+    private var stationsDelegate:  OpenWeatherMapStationsDelegate!
     
     init(delegate: OpenWeatherMapDelegate) {
         self.delegate = delegate
     }
     
+    init(delegate: OpenWeatherMapStationsDelegate) {
+        self.stationsDelegate = delegate
+    }
     
+    func getWeatherByCity(city: String) {
+        let weatherRequestURL = NSURL(string: "\(baseURL)/weather?APPID=\(myAPIKey)&q=\(city)")!
+        getWeather(weatherRequestURL)
+    }
+
     
-    func getWeather(city: String){
+    func getWeatherByCoordinates(latitude: Double, longitude: Double) {
+        let weatherRequestURL = NSURL(string: "\(baseURL)/weather?APPID=\(myAPIKey)&lat=\(latitude)&lon=\(longitude)")!
+        getWeather(weatherRequestURL)
+    }
+    
+
+    
+
+
+    func getWeather(weatherRequestURL: NSURL){
         
         // This is a pretty simple networking task, so the shared session will do.
         let session = NSURLSession.sharedSession()
         
-        let weatherRequestURL = NSURL(string: "\(baseURL)?APPID=\(myAPIKey)&q=\(city)")!
+        //let weatherRequestURL = NSURL(string: "\(baseURL)?APPID=\(myAPIKey)&q=\(city)")!
         
         // The data task retrieves the data. {() in } syntax equivalent to dataTaskWithURL(weatherRequestURL, completion: {(.....) in ..handler func name or code directly....})
         let dataTask = session.dataTaskWithURL(weatherRequestURL) {
@@ -116,5 +139,64 @@ class OpenWeatherMap {
         // The data task is set up...launch it!
         dataTask.resume()
     }
+    
+    
+    
+    
+    func getSations(longitudeP1: Double, latitudeP1: Double, longitudeP2: Double, latitudeP2: Double){
+        let stationsRequestURL = NSURL(string: "\(baseURL)/box/city?APPID=\(myAPIKey)&bbox=\(longitudeP1),\(latitudeP1),\(longitudeP2),\(latitudeP2)&cluster=yes")!
+        
+        
+    
+        // This is a pretty simple networking task, so the shared session will do.
+        let session = NSURLSession.sharedSession()
+        
+        //let weatherRequestURL = NSURL(string: "\(baseURL)?APPID=\(myAPIKey)&q=\(city)")!
+        
+        // The data task retrieves the data. {() in } syntax equivalent to dataTaskWithURL(weatherRequestURL, completion: {(.....) in ..handler func name or code directly....})
+        let dataTask = session.dataTaskWithURL(stationsRequestURL) {
+            (data: NSData?, response: NSURLResponse?, error: NSError?) in
+            if let error = error {
+                // Case 1: Error
+                // An error occurred while trying to get data from the server.
+                self.stationsDelegate.didNotGetStations(error)
+            }
+            else {
+                // Case 2: Success
+                // We got a response from the server!
+                
+                do {
+                    // Try to convert that JSON data into a Swift dictionary
+                    let stations = try NSJSONSerialization.JSONObjectWithData(
+                        data!,
+                        options: .MutableContainers) as! [String: AnyObject]
+                    
+                    // If we made it to this point, we've successfully converted the
+                    // JSON-formatted weather data into a Swift dictionary.
+                    // Let's now used that dictionary to initialize a Weather struct.
+                    
+                    
+                    
+                    // Now that we have the Weather struct, let's notify the view controller,
+                    // which will use it to display the weather to the user.
+                    self.stationsDelegate.didGetStations(stations)
+                    
+                    
+                }
+                catch let jsonError as NSError {
+                    // An error occurred while trying to convert the data into a Swift dictionary.
+                    self.stationsDelegate.didNotGetStations(jsonError)
+                }
+                
+                
+                
+            }
+        }
+        
+        // The data task is set up...launch it!
+        dataTask.resume()
+        
+    }
+    
     
 }

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		CB9664D61DE44AD10069B12C /* OpenWeatherMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9664D51DE44AD10069B12C /* OpenWeatherMap.swift */; };
 		CB98DDB51DDB4A0E00C80E27 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB98DDB41DDB4A0E00C80E27 /* AppDelegate.swift */; };
-		CB98DDBD1DDB4A0E00C80E27 /* WeatherApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CB98DDBB1DDB4A0E00C80E27 /* WeatherApp.xcdatamodeld */; };
 		CB98DDBF1DDB4A0E00C80E27 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB98DDBE1DDB4A0E00C80E27 /* Assets.xcassets */; };
 		CB98DDC21DDB4A0E00C80E27 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB98DDC01DDB4A0E00C80E27 /* LaunchScreen.storyboard */; };
 		CB98DDCD1DDB4A0F00C80E27 /* WeatherAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB98DDCC1DDB4A0F00C80E27 /* WeatherAppTests.swift */; };
@@ -20,7 +19,7 @@
 		CB9E94071DDC930A00F643E0 /* CityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9E94061DDC930A00F643E0 /* CityTableViewCell.swift */; };
 		CB9E940A1DDCB5A000F643E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB9E94081DDCB5A000F643E0 /* Main.storyboard */; };
 		CBCC1AD81DE85C6000D1A982 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC1AD71DE85C6000D1A982 /* MapViewController.swift */; };
-		CBCC1ADA1DE88CB900D1A982 /* ColorPointAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC1AD91DE88CB900D1A982 /* ColorPointAnnotation.swift */; };
+		CBCC1ADA1DE88CB900D1A982 /* CustomAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC1AD91DE88CB900D1A982 /* CustomAnnotation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,7 +43,6 @@
 		CB9664D51DE44AD10069B12C /* OpenWeatherMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenWeatherMap.swift; sourceTree = "<group>"; };
 		CB98DDB11DDB4A0E00C80E27 /* WeatherApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WeatherApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB98DDB41DDB4A0E00C80E27 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		CB98DDBC1DDB4A0E00C80E27 /* WeatherApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WeatherApp.xcdatamodel; sourceTree = "<group>"; };
 		CB98DDBE1DDB4A0E00C80E27 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CB98DDC11DDB4A0E00C80E27 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CB98DDC31DDB4A0E00C80E27 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -60,7 +58,7 @@
 		CB9E94061DDC930A00F643E0 /* CityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityTableViewCell.swift; sourceTree = "<group>"; };
 		CB9E94091DDCB5A000F643E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CBCC1AD71DE85C6000D1A982 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
-		CBCC1AD91DE88CB900D1A982 /* ColorPointAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorPointAnnotation.swift; sourceTree = "<group>"; };
+		CBCC1AD91DE88CB900D1A982 /* CustomAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAnnotation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,10 +118,9 @@
 				CB9664D51DE44AD10069B12C /* OpenWeatherMap.swift */,
 				CB9E94081DDCB5A000F643E0 /* Main.storyboard */,
 				CBCC1AD71DE85C6000D1A982 /* MapViewController.swift */,
-				CBCC1AD91DE88CB900D1A982 /* ColorPointAnnotation.swift */,
+				CBCC1AD91DE88CB900D1A982 /* CustomAnnotation.swift */,
 				CB98DDBE1DDB4A0E00C80E27 /* Assets.xcassets */,
 				CB98DDC31DDB4A0E00C80E27 /* Info.plist */,
-				CB98DDBB1DDB4A0E00C80E27 /* WeatherApp.xcdatamodeld */,
 			);
 			path = WeatherApp;
 			sourceTree = "<group>";
@@ -215,6 +212,11 @@
 					CB98DDB01DDB4A0E00C80E27 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = ZPHFG55HXV;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 0;
+							};
+						};
 					};
 					CB98DDC71DDB4A0F00C80E27 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -279,8 +281,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB9E94071DDC930A00F643E0 /* CityTableViewCell.swift in Sources */,
-				CBCC1ADA1DE88CB900D1A982 /* ColorPointAnnotation.swift in Sources */,
-				CB98DDBD1DDB4A0E00C80E27 /* WeatherApp.xcdatamodeld in Sources */,
+				CBCC1ADA1DE88CB900D1A982 /* CustomAnnotation.swift in Sources */,
 				CB98DDE81DDB4E1200C80E27 /* DetailViewController.swift in Sources */,
 				CB98DDB51DDB4A0E00C80E27 /* AppDelegate.swift in Sources */,
 				CB98DDEA1DDB535800C80E27 /* City.swift in Sources */,
@@ -536,19 +537,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		CB98DDBB1DDB4A0E00C80E27 /* WeatherApp.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				CB98DDBC1DDB4A0E00C80E27 /* WeatherApp.xcdatamodel */,
-			);
-			currentVersion = CB98DDBC1DDB4A0E00C80E27 /* WeatherApp.xcdatamodel */;
-			path = WeatherApp.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = CB98DDA91DDB4A0E00C80E27 /* Project object */;
 }

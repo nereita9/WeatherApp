@@ -13,10 +13,13 @@ class City: NSObject, NSCoding {
     
     //MARK: Properties
     let name: String
+    let id: Int
     let weather: String?
     let temperature: Double?
     var weatherPic: UIImage?
     var weatherIconID: String?
+    var weatherColor: UIColor?
+
     
     //MARK: Archiving Paths
     static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
@@ -25,34 +28,16 @@ class City: NSObject, NSCoding {
     //MARK: Types
     struct PropertyKey {
         static let nameKey = "name"
-        static let weatherKey = "weather"
-        static let temperatureKey = "temperature"
-        static let weatherPicKey = "weatherPic"
-        static let weatherIconKey = "weatherDescription"
+        static let idKey = "id"
+     
     }
 
     
     //MARK: Initialization
-    /*init(name: String, temperature: Double, weather: Int) { //it can return nil
-        self.name = name
-        self.temperature = temperature
-        self.weather = weather
-        
-        //preguntarlo cada vez en vez de guardarlo????
-        self.weatherPic = nil
-        self.weatherDescription = nil
-
-        //need to call the superclass nscoding initializer
-        super.init()
-        
-        self.weatherPic = weatherInterpretation().0!
-        self.weatherDescription = weatherInterpretation().1
-
- 
-    }*/
     
     init(weatherData: [String: AnyObject]) {
         self.name = weatherData["name"] as! String
+        self.id = weatherData["id"] as! Int
         
         let mainDictionary = weatherData["main"] as! [String: AnyObject]
         let exactTemperature = (mainDictionary["temp"] as! Double) - 273.15 //in celsius
@@ -65,17 +50,20 @@ class City: NSObject, NSCoding {
         self.weatherIconID = weatherDictionary["icon"] as? String
         //preguntarlo cada vez en vez de guardarlo????
         self.weatherPic = nil
+        self.weatherColor = nil
 
         //need to call the superclass nscoding initializer
         super.init()
         
         self.weatherPic = weatherPicFunc()
+        self.weatherColor = weatherColorFunc()
 
         
     }
     
-    init(name: String) {
+    init(name: String, id: Int) {
         self.name = name
+        self.id = id
     
         self.temperature = nil
 
@@ -83,64 +71,78 @@ class City: NSObject, NSCoding {
         self.weatherIconID = nil
 
         self.weatherPic = nil
-    
-        
-        
+ 
     }
-
-
     
-  
-    /*
-    //method for fetching a weather image
-    func weatherInterpretation() -> (UIImage?, String) {
-        switch self.weather {
-        case 0:
-            return (UIImage(named: "cloudy.png"), "Cloudy")
-        case 1:
-            return (UIImage(named: "sunny.png"), "Sunny")
-        default:
-            return (UIImage(named: "night.png"), "Night")
-        }
-    }*/
+    
+    
     
     //method for fetching a weather image
     func weatherPicFunc() -> UIImage {
         switch self.weatherIconID! {
-        case "03d", "04d":
-            return UIImage(named: "cloudy.png")!
-        case "01d", "02d":
-            return UIImage(named: "sunny.png")!
+        case "03d", "03n":
+            return UIImage(named: "03dn.png")!
+        case "04d", "04n":
+            return UIImage(named: "04dn.png")!
+        case "09d", "09n":
+            return UIImage(named: "09dn.png")!
+        case "11d", "11n":
+            return UIImage(named: "11dn.png")!
+        case "13d", "13n":
+            return UIImage(named: "13dn.png")!
+        case "50d", "50n":
+            return UIImage(named: "50dn.png")!
         default:
-            return UIImage(named: "night.png")!
+            return UIImage(named: "\(self.weatherIconID!).png")!
         }
     }
+    
+     //method for fetching a weather color
+    func weatherColorFunc() -> UIColor {
+        
+        switch self.weatherIconID! {
+        case "01d": //yellow
+            return UIColor(red: 231/255, green: 199/255, blue: 24/255, alpha:1)
+        case "01n": //pink
+            return UIColor(red: 166/255, green: 38/255, blue: 106/255, alpha:1)
+        case "02d", "10d": //light blue
+            return UIColor(red: 50/255, green: 190/255, blue: 188/255, alpha:1)
+        case "02n", "10n": //light purple
+            return UIColor(red: 142/255, green: 48/255, blue: 139/255, alpha:1)
+
+        
+        case "03d", "04d",  "09d", "11d", "13d": //dark blue
+            return UIColor(red: 25/255, green: 95/255, blue: 165/255, alpha:1)
+
+        case "03n", "04n", "09n", "11n", "13n": //dark purple
+            return UIColor(red: 90/255, green: 25/255, blue: 94/255, alpha:1)
+            
+        case "50d", "50n": //grey
+            return UIColor(red: 204/255, green: 204/255, blue: 204/255, alpha:1)
+        default:
+           return UIColor(red: 204/255, green: 204/255, blue: 204/255, alpha:1)
+        }
+    }
+
 
     
     
     //MARK: NSCoding
     func encodeWithCoder(aCoder: NSCoder) {
         aCoder.encodeObject(name, forKey: PropertyKey.nameKey)
-        //aCoder.encodeObject(temperature, forKey: PropertyKey.temperatureKey)
-        //aCoder.encodeObject(weather, forKey: PropertyKey.weatherKey)
-        //aCoder.encodeObject(weatherPic, forKey: PropertyKey.weatherPicKey)
-        //aCoder.encodeObject(weatherDescription, forKey: PropertyKey.weatherDescriptionKey)
+        aCoder.encodeObject(id, forKey: PropertyKey.idKey)
+        
+        
 
     }
     
     required convenience init?(coder aDecoder: NSCoder) {
         let name = aDecoder.decodeObjectForKey(PropertyKey.nameKey) as! String
-        //photo is optional
-        //let temperature = aDecoder.decodeObjectForKey(PropertyKey.temperatureKey) as! Double
+        let id = aDecoder.decodeObjectForKey(PropertyKey.idKey) as! Int
+        self.init(name: name, id: id)
         
-        //let weather = aDecoder.decodeObjectForKey(PropertyKey.weatherKey) as! Int
         
-        //let weatherPic = aDecoder.decodeObjectForKey(PropertyKey.weatherPicKey) as! UIImage
-        
-        //let weatherDescription = aDecoder.decodeObjectForKey(PropertyKey.weatherDescriptionKey) as! String
-        
-        //as convenience initializer it must call one of the class initializer
-        self.init(name: name)
+            
         
     }
 

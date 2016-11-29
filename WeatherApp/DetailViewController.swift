@@ -38,10 +38,10 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
     }
     
     func refreshUI(){
-    
         
-        weather.getWeatherByCity(city.name)
+        weather.getWeatherById(city.id)
         print("UI refreshed")
+        
     }
     
     //Actions
@@ -60,14 +60,20 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //when Favorites is empty in ipad landscape detail view is shown a little before launching maps, better see white screen that the default labels..
+        self.nameLabel?.text = nil
+        self.temperatureLabel?.text = nil
+        self.weatherLabel?.text = nil
+
+        
         //observe when the application opens from background
         NSNotificationCenter.defaultCenter().addObserver(
             self, selector: #selector(self.applicationDidBecomeActive(_:)), name: UIApplicationDidBecomeActiveNotification, object: nil)
         
         //if there are already a city asigned, in case table view empty no city asgned (it may happen)!!!
-        if city != nil {
-            refreshUI()
-        }
+        //if city != nil {
+         //   refreshUI()
+        //}
         
         // Do any additional setup after loading the view.
     }
@@ -80,15 +86,6 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
     }
     
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
     
     
     
@@ -100,10 +97,20 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
         // ALl UI code needs to execute in the main queue, which is why we're wrapping the code
         // that updates all the labels in a dispatch_async() call.
         dispatch_async(dispatch_get_main_queue()) {
+            
             self.nameLabel?.text = city.name
             self.temperatureLabel?.text = String(city.temperature!)+" ºC"
             self.weatherLabel?.text = city.weather!.capitalizedString
+            
             self.iconImageView?.image = city.weatherPic!
+            self.iconImageView?.image = self.iconImageView?.image!.imageWithRenderingMode(.AlwaysTemplate)
+            self.iconImageView?.tintColor = UIColor.whiteColor()
+            
+            UIView.animateWithDuration(0.3, animations: {Void in
+                self.view.backgroundColor = city.weatherColor
+            })
+
+            
         }
     }
     

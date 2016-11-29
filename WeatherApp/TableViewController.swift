@@ -7,14 +7,14 @@
 //
 
 import UIKit
-import CoreLocation
+
 
 
 protocol CitySelectionDelegate: class {
     func citySelected(newCity: City)
 }
 
-class TableViewController: UITableViewController, CLLocationManagerDelegate {
+class TableViewController: UITableViewController{
     
    
     
@@ -27,45 +27,115 @@ class TableViewController: UITableViewController, CLLocationManagerDelegate {
         didSet (newCity){
             
             self.refreshTable()
+            
+            self.presentDetailViewControllerWithSelectedCity()
+            
         }
     }
     
-    func refreshTable(){
-        
-        self.cities.insert(city, atIndex: 0)
-        
-        tableView.reloadData()
-        //save cities in MEM
-        saveCities()
+    func cityAlreadySaved(id: Int) -> Int? {
+        for i in 0..<cities.count {
+            if cities[i].id == id {
+                return i
+            }
+        }
+        return nil
     }
     
+    func refreshTable(){
+        let existingCityRow = cityAlreadySaved(city.id)
+        if existingCityRow != nil {
+            let existingCity = cities[existingCityRow!]
+            
+            self.cities.removeAtIndex(existingCityRow!)
+            self.cities.insert(existingCity, atIndex: 0)
+            
+            //save cities in MEM
+            tableView.reloadData()
+           
+            self.delegate?.citySelected(existingCity)
+            
+        }
+        else {
+            
+            self.cities.insert(city, atIndex: 0)
+            //save cities in MEM
+            tableView.reloadData()
+            self.delegate?.citySelected(city)
+            
+        }
+        
+        
+    }
+    
+    func presentDetailViewControllerWithSelectedCity(){
+        
+        if let detailViewController = self.delegate as? DetailViewController {
+            
+            
+            
+            
+            if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) || (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().nativeBounds.height == 2208 ) ){
+
+                //hide master view (table view) when clicking. In ipad portrait
+                if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) && (UIDevice.currentDevice().orientation == .Portrait || UIDevice.currentDevice().orientation == .PortraitUpsideDown)){
+                    
+                    
+                    UIView.animateWithDuration(0.3, animations: {
+                        self.splitViewController?.preferredDisplayMode = .PrimaryHidden
+                        }, completion: { finished in
+                            //restore
+                            self.splitViewController?.preferredDisplayMode = .Automatic
+                    })
+  
+                    
+                }
+                else {
+                    // print("ipad or iphone 6 plus")
+                    
+                    splitViewController?.showDetailViewController(detailViewController.navigationController!,sender: nil)
+                }
+                
+                
+            }
+            else {
+                //MARK:super important
+                //show the detailviewcontroller instead of the navigation controller to avoid the size classes variation probles
+                //print("iphone")
+                splitViewController?.showDetailViewController(detailViewController, sender: nil)
+            }
+        }
+
+    }
 
 
     
     weak var delegate: CitySelectionDelegate?
     
-    let locationManager = CLLocationManager()
-    
     var weather: OpenWeatherMap!
+    
+    var firstLaunch = true
     
     @IBOutlet weak var addButton: UIBarButtonItem!
     
-    
-    //MARK: Actions
-    
-    /*@IBAction func showMapView(sender: UIBarButtonItem) {
-        mapViewController.delegate = self
-        self.navigationController?.pushViewController(mapViewController, animated: true)
-    }*/
-    
+        
     
     //MARK: Navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if sender === addButton {
         
-            let mapNavViewController = segue.destinationViewController as! UINavigationController
-            let mapViewController = mapNavViewController.topViewController as! MapViewController
-            mapViewController.delegate = self
+        let mapNavViewController = segue.destinationViewController as! UINavigationController
+        let mapViewController = mapNavViewController.topViewController as! MapViewController
+        mapViewController.delegate = self
+       
+        if sender === addButton {
+            mapViewController.title = "Map"
+            mapViewController.noCitiesInFavorites = false
+
+        }
+        else if sender === self {
+            mapViewController.title = "Select one City"
+            mapViewController.noCitiesInFavorites = true
+
         }
     }
     
@@ -79,35 +149,26 @@ class TableViewController: UITableViewController, CLLocationManagerDelegate {
             
             if savedCities.count > 0 {
                  cities+=savedCities
-                
+ 
             }
-            else {
-                
-                getLocation()
-            }
-        }
-            
-        else {
-            
-            getLocation()
-        }
-            
 
-        
-        
+        }
     }
     
-    func loadSampleCities(){
+    override func viewDidAppear(animated: Bool) {
         
-        self.cities.append(City(name:"Paris"))
-        self.cities.append(City(name:"Madrid"))
-    }
+        if firstLaunch == true {
+        
+            if let savedCities = loadCities() {
+            
+                if savedCities.count == 0 {
+                
+                    self.performSegueWithIdentifier("mapSegue", sender: self)
+                }
+            }
+        }
+        firstLaunch = false
 
-    func setDefaultCity(){
-        //put Paris in case of no location
-        self.cities.append(City(name:"Paris"))
-        self.delegate?.citySelected(self.cities.first!)
-        
     }
     
     
@@ -122,6 +183,7 @@ class TableViewController: UITableViewController, CLLocationManagerDelegate {
             //the first row is the last city selected as in cellForRowAtIndexPath we configure the selected cell to go on top
             currentSelectedIndexPath = NSIndexPath(forRow: 0, inSection: 0)
             tableView.selectRowAtIndexPath(currentSelectedIndexPath, animated: true, scrollPosition: .Top)
+           
             //let firstSelectedCell = tableView.cellForRowAtIndexPath(currentSelectedIndexPath!)! as UITableViewCell
             //firstSelectedCell.backgroundColor = UIColor.blueColor()
         }
@@ -167,7 +229,7 @@ class TableViewController: UITableViewController, CLLocationManagerDelegate {
         cell.textLabel?.text = city.name
         
         //this will make the scroll begin in the top
-        tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Top, animated: true)
+        //tableView.setContentOffset(CGPointZero, animated: true)
         
         return cell
     }
@@ -176,56 +238,20 @@ class TableViewController: UITableViewController, CLLocationManagerDelegate {
         let selectedCity = self.cities[indexPath.row]
         
         //move selected cell to the top, and selected city as first element of cities
-        tableView.moveRowAtIndexPath(indexPath, toIndexPath: NSIndexPath(forRow: 0, inSection: 0) )
+        tableView.moveRowAtIndexPath(indexPath, toIndexPath: NSIndexPath(forRow: 0, inSection: 0))
+        
+        tableView.selectRowAtIndexPath(currentSelectedIndexPath, animated: true, scrollPosition: .Top)
         
         self.cities.removeAtIndex(indexPath.row)
         self.cities.insert(selectedCity, atIndex: 0)
         
-
+        saveCities()
         
         self.delegate?.citySelected(selectedCity)
-        if let detailViewController = self.delegate as? DetailViewController {
-            
-          
-
-            
-            if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) || (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().nativeBounds.height == 2208 ) ){
-                
-                
-                //&& (UIDevice.currentDevice().orientation == .LandscapeLeft || UIDevice.currentDevice().orientation == .LandscapeRight)
-                
-               // print("ipad or iphone 6 plus")
-                
-                splitViewController?.showDetailViewController(detailViewController.navigationController!,sender: nil)
-                
-                
-                //hide master view (table view) when clicking. In ipad portrait
-                if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) && (UIDevice.currentDevice().orientation == .Portrait || UIDevice.currentDevice().orientation == .PortraitUpsideDown)){
-                    
-                                       
-                    UIView.animateWithDuration(0.3, animations: {
-                        self.splitViewController?.preferredDisplayMode = .PrimaryHidden
-                    }, completion: { finished in
-                        //restore
-                        self.splitViewController?.preferredDisplayMode = .Automatic
-                    })
-                    
-                    
-                    
-
-
-                }
-                
-                
-            }
-            else {
-                //MARK:super important
-                //show the detailviewcontroller nstead of the navigation controller to avoid the size classes variation probles
-                //print("iphone")
-                splitViewController?.showDetailViewController(detailViewController, sender: nil)
-            }
-        }
         
+        self.presentDetailViewControllerWithSelectedCity()
+        
+       
 
     }
      
@@ -245,6 +271,20 @@ class TableViewController: UITableViewController, CLLocationManagerDelegate {
             // Delete the row from the data source
             cities.removeAtIndex(indexPath.row)
             
+            //if the user removes the selected city, the first city
+            if indexPath.row == 0 {
+                if cities.count > 0 {
+                    //if there are still cities, launch detail view with the new first city
+                    let newSelectedCity = self.cities[indexPath.row]
+                    self.delegate?.citySelected(newSelectedCity)
+                    self.presentDetailViewControllerWithSelectedCity()
+                }
+                else {
+                    //if user removed all the cities, launch map to let user select another city
+                    self.performSegueWithIdentifier("mapSegue", sender: self)
+                }
+            }
+            
             //save cities in MEM
             saveCities()
             
@@ -256,163 +296,18 @@ class TableViewController: UITableViewController, CLLocationManagerDelegate {
     }
     
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    /*override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-
-        if segue.identifier == "showDetail" {
-            let navViewController = segue.destinationViewController as! UINavigationController
-            let detailViewController = navViewController.topViewController as! DetailViewController
-            if let selectedCityCell = sender as? CityTableViewCell {
-                let indexPath = tableView.indexPathForCell(selectedCityCell)!
-                let selectedCity = cities[indexPath.row]
-                detailViewController.city = selectedCity
-                
-            }
-        }
-    }*/
-    
-    //MARK: CLLocationManager
-    func getLocation() {
-        guard CLLocationManager.locationServicesEnabled() else {
-            
-            let alertVC = UIAlertController(title: "Location services are disabled on your device", message: "In order to use ths app, go to Settings → Privacy → Location Services and turn location services on.", preferredStyle: .Alert)
-            let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
-            alertVC.addAction(okAction)
-            self.presentViewController(alertVC, animated: true, completion: nil)
-            
-            //if location failed, setdefault city Paris
-            setDefaultCity()
-            return
-        }
-        
-        let authStatus = CLLocationManager.authorizationStatus()
-        guard authStatus == .AuthorizedWhenInUse else {
-            switch authStatus {
-            case .Denied, .Restricted:
-                
-                let alertVC = UIAlertController(title: "This app is not authorized to use your location.", message: "In order to use this app, go to Settings → WeatherApp → Location and select the \"While Using the App\" setting.", preferredStyle: .Alert)
-                let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
-                alertVC.addAction(okAction)
-                self.presentViewController(alertVC, animated: true, completion: nil)
-                
-            case .NotDetermined:
-                locationManager.requestWhenInUseAuthorization()
-                
-            default:
-                print("Oops! This case should never be reached.")
-                
-            }
-            //if location failed, setdefault city Paris
-          
-            setDefaultCity()
-            return
-        }
-        
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
-    }
-    
-    // MARK: - CLLocationManagerDelegate methods
-    
-    // This is called if:
-    // - the location manager is updating, and
-    // - it was able to get the user's location.
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-       
-        let location = locations.last!
-        print("location")
-        saveCityByCoordinates(location)
-            
-        
-      
-    }
-    
-    var notify = true
-    // This is called if:
-    // - the location manager is updating, and
-    // - it WASN'T able to get the user's location.
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        
-        // This method is called asynchronously, which means it won't execute in the main queue.
-        // All UI code needs to execute in the main queue, which is why we're wrapping the call
-        
-        //it enters here several times and problems comes, we want to avoid that
-        if notify == true {
-        
-            dispatch_async(dispatch_get_main_queue()) {
-                let alertVC = UIAlertController(title: "Can't determine your location", message: "The GPS and other location services aren't responding.", preferredStyle: .Alert)
-                let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
-                alertVC.addAction(okAction)
-                self.presentViewController(alertVC, animated: true, completion: nil)
-        
-                //if location failed, setdefault city Paris
-                self.setDefaultCity()
-                print("set default city")
-            }
-            notify = false
-        }
-    }
-    
-    
-    func saveCityByCoordinates(location: CLLocation) {
-        let geoCoder = CLGeocoder()
-        geoCoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
-            
-            // Place details
-            var placeMark: CLPlacemark!
-            placeMark = placemarks?[0]
-            
-            
-            // City
-            if let myCity = placeMark.addressDictionary!["City"] as? NSString {
-                print(myCity)
-                self.cities.append(City(name: String(myCity)))
-                self.delegate?.citySelected(self.cities.first!)
-            }
-            
-
-           
-            
-        })
-
-    }
-
+  
     
     //MARK: NSCoding
     func saveCities() {
         let isSuccesfulSave = NSKeyedArchiver.archiveRootObject(cities, toFile: City.ArchiveURL.path!)
-        if !isSuccesfulSave { print("Failed to save meals....") }
+        if !isSuccesfulSave { print("Failed to save cities....") }
     }
     
     func loadCities() -> [City]? {
         return NSKeyedUnarchiver.unarchiveObjectWithFile(City.ArchiveURL.path!) as? [City]
     }
-/*
-    func setOverrideTraitCollection(collection: UITraitCollection?, forChildViewController childViewController: UIViewController) {
-        childViewController.class
-    }
-  */
+
     
 }
 

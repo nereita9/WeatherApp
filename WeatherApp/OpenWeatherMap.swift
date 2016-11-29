@@ -47,21 +47,14 @@ class OpenWeatherMap {
         self.stationsDelegate = delegate
     }
     
-    func getWeatherByCity(city: String) {
-        let weatherRequestURL = NSURL(string: "\(baseURL)/weather?APPID=\(myAPIKey)&q=\(city)")!
+
+    
+    func getWeatherById(id: Int) {
+        let weatherRequestURL = NSURL(string: "\(baseURL)/weather?APPID=\(myAPIKey)&id=\(id)")!
         getWeather(weatherRequestURL)
     }
 
     
-    func getWeatherByCoordinates(latitude: Double, longitude: Double) {
-        let weatherRequestURL = NSURL(string: "\(baseURL)/weather?APPID=\(myAPIKey)&lat=\(latitude)&lon=\(longitude)")!
-        getWeather(weatherRequestURL)
-    }
-    
-
-    
-
-
     func getWeather(weatherRequestURL: NSURL){
         
         // This is a pretty simple networking task, so the shared session will do.
@@ -97,34 +90,7 @@ class OpenWeatherMap {
                     // which will use it to display the weather to the user.
                     self.delegate.didGetWeather(city)
 
-                    // Let's print its contents to the debug console.
-                    
-                    //anyObject! you are storing is an optional, and dictionaries retireves also the optional of the storage value so !!
-                    /*print("Date and time: \(weather["dt"]!)")
-                    print("City: \(weather["name"]!)")
-                    
-                    print("Longitude: \(weather["coord"]!["lon"]!!)")
-                    print("Latitude: \(weather["coord"]!["lat"]!!)")
-                    
-                    print("Weather ID: \(weather["weather"]![0]!["id"]!!)")
-                    print("Weather main: \(weather["weather"]![0]!["main"]!!)")
-                    print("Weather description: \(weather["weather"]![0]!["description"]!!)")
-                    print("Weather icon ID: \(weather["weather"]![0]!["icon"]!!)")
-                    
-                    print("Temperature: \(weather["main"]!["temp"]!!)")
-                    print("Humidity: \(weather["main"]!["humidity"]!!)")
-                    print("Pressure: \(weather["main"]!["pressure"]!!)")
-                    
-                    print("Cloud cover: \(weather["clouds"]!["all"]!!)")
-                    
-                    print("Wind direction: \(weather["wind"]!["deg"]!!) degrees")
-                    print("Wind speed: \(weather["wind"]!["speed"]!!)")
-                    
-                    print("Country: \(weather["sys"]!["country"]!!)")
-                    print("Sunrise: \(weather["sys"]!["sunrise"]!!)")
-                    print("Sunset: \(weather["sys"]!["sunset"]!!)")
-                    */
-                    
+                                        
                 }
                 catch let jsonError as NSError {
                     // An error occurred while trying to convert the data into a Swift dictionary.
@@ -146,7 +112,7 @@ class OpenWeatherMap {
     func getSations(longitudeP1: Double, latitudeP1: Double, longitudeP2: Double, latitudeP2: Double){
         let stationsRequestURL = NSURL(string: "\(baseURL)/box/city?APPID=\(myAPIKey)&bbox=\(longitudeP1),\(latitudeP1),\(longitudeP2),\(latitudeP2)&cluster=yes")!
         
-        
+        //print("search: \(longitudeP1),\(latitudeP1),\(longitudeP2),\(latitudeP2)")
     
         // This is a pretty simple networking task, so the shared session will do.
         let session = NSURLSession.sharedSession()
@@ -170,12 +136,6 @@ class OpenWeatherMap {
                     let stations = try NSJSONSerialization.JSONObjectWithData(
                         data!,
                         options: .MutableContainers) as! [String: AnyObject]
-                    
-                    // If we made it to this point, we've successfully converted the
-                    // JSON-formatted weather data into a Swift dictionary.
-                    // Let's now used that dictionary to initialize a Weather struct.
-                    
-                    
                     
                     // Now that we have the Weather struct, let's notify the view controller,
                     // which will use it to display the weather to the user.

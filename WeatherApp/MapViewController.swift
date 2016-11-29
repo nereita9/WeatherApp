@@ -19,22 +19,42 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
     @IBOutlet weak var mapView: MKMapView!
     
     weak var delegate: CityAdditionDelegate?
+    var noCitiesInFavorites: Bool?
     
     var mRect: MKMapRect?
     
     var weather: OpenWeatherMap!
     
-    var afterInit = false
-    
     var city: City?
     
     var selectedCity: String?
+    var cityId: Int?
     
     
     
     
     @IBAction func mapsCancel(sender: UIBarButtonItem) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        if noCitiesInFavorites == true {
+            //if there are no cities in favorites user must select a city in the map, cannot cancel
+            dispatch_async(dispatch_get_main_queue()) {
+                
+                let alertVC = UIAlertController(title: "You must select one city in the map", message: "There are no stored cities in Favorites.", preferredStyle: .Alert)
+                
+                
+                let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+                
+                alertVC.addAction(okAction)
+                
+                self.presentViewController(alertVC, animated: true, completion: nil)
+                
+                
+                
+            }
+
+        }
+        else {
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
     }
     
     override func viewDidLoad() {
@@ -42,19 +62,17 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
         weather = OpenWeatherMap(delegate: self)
         mapView.delegate = self
         
+        
     
     }
     
-    func mapViewWillStartLoadingMap(mapView: MKMapView) {
-               
+    
 
-    }
     
     //gets call first time mapView is loading and each time mapView view changes
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         
-        //not execute time the first time when all the map is loading
-        if afterInit == true {
+
         mRect = self.mapView.visibleMapRect
         
         let bottomLeft: CLLocationCoordinate2D
@@ -64,10 +82,7 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
         topRight = MKCoordinateForMapPoint(MKMapPointMake(MKMapRectGetMaxX(mRect!), mRect!.origin.y))
         
         weather.getSations(bottomLeft.longitude, latitudeP1: bottomLeft.latitude, longitudeP2: topRight.longitude, latitudeP2: topRight.latitude)
-        }
-        else {
-            afterInit = true
-        }
+  
 
         
     }
@@ -82,8 +97,8 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
         if pinView == nil {
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
             
-            let colorPointAnnotation = annotation as! ColorPointAnnotation
-            pinView?.pinTintColor = colorPointAnnotation.pinColor
+            let customAnnotation = annotation as! CustomAnnotation
+            pinView?.pinTintColor = customAnnotation.pinColor
             
             pinView?.canShowCallout = false //important for the handle when selecting an annotation
             
@@ -97,10 +112,15 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
     
     //handle annotation view selection
     func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
-        selectedCity = (view.annotation?.title)!
-        city = City(name: selectedCity!)
+        let annotation = view.annotation as! CustomAnnotation
+        selectedCity = annotation.city
+        cityId = annotation.cityId
+       
         
-        //TODO check if delegate implements protocol 
+        
+        city = City(name: selectedCity!, id: cityId!)
+        
+        //importantttt check if delegate implements protocol 
         self.delegate?.cityAddition(city!)
         self.dismissViewControllerAnimated(true, completion: nil)
         
@@ -131,14 +151,16 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
             let lon = stationsList[i]["coord"]!["lon"] as! Double
             let lat = stationsList[i]["coord"]!["lat"] as! Double
             let name = stationsList[i]["name"] as! String
+            let id = stationsList[i]["id"] as! Int
             
             //print("\(name): \(lat), \(lon)")
             
             
-            let annotation = ColorPointAnnotation(pinColor: UIColor.purpleColor())
+            let annotation = CustomAnnotation(city: name, cityId: id, pinColor: UIColor.purpleColor())
             annotation.coordinate = CLLocationCoordinate2DMake(lat, lon)
             annotation.title = name
-           
+            
+
             dispatch_async(dispatch_get_main_queue()) {
                 
                  self.mapView.addAnnotation(annotation)

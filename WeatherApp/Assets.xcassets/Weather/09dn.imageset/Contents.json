@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "09dn.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Weather_forecast-16-512-2.png",
       "scale" : "2x"
     },
     {

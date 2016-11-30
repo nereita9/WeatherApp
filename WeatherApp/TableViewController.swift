@@ -33,37 +33,47 @@ class TableViewController: UITableViewController{
         }
     }
     
-    func cityAlreadySaved(id: Int) -> Int? {
-        for i in 0..<cities.count {
-            if cities[i].id == id {
-                return i
-            }
-        }
-        return nil
-    }
+
     
     func refreshTable(){
-        let existingCityRow = cityAlreadySaved(city.id)
-        if existingCityRow != nil {
-            let existingCity = cities[existingCityRow!]
-            
-            self.cities.removeAtIndex(existingCityRow!)
-            self.cities.insert(existingCity, atIndex: 0)
-            
-            //save cities in MEM
-            tableView.reloadData()
-           
-            self.delegate?.citySelected(existingCity)
-            
+        
+        
+        for i in 0..<cities.count {
+            //if the city the user wants to add is already saved in favorites
+            if cities[i].id == city.id {
+                
+                let existingCity = cities[i]
+                
+                // we put the city at the top
+                self.cities.removeAtIndex(i)
+                self.cities.insert(existingCity, atIndex: 0)
+                
+                tableView.reloadData()
+                
+                //save cities in MEM
+                saveCities()
+                
+                
+                
+                self.delegate?.citySelected(existingCity)
+                
+                return
+            }
         }
-        else {
+
+        //If we reach this point the city not exists already
+ 
+        self.cities.insert(city, atIndex: 0)
+        
+        tableView.reloadData()
+        
+        //save cities in MEM
+        saveCities()
+        
+        
+        self.delegate?.citySelected(city)
             
-            self.cities.insert(city, atIndex: 0)
-            //save cities in MEM
-            tableView.reloadData()
-            self.delegate?.citySelected(city)
-            
-        }
+        
         
         
     }
@@ -165,6 +175,9 @@ class TableViewController: UITableViewController{
                 
                     self.performSegueWithIdentifier("mapSegue", sender: self)
                 }
+            }
+            else {
+                 self.performSegueWithIdentifier("mapSegue", sender: self)
             }
         }
         firstLaunch = false

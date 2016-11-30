@@ -94,6 +94,7 @@ class OpenWeatherMap {
                 }
                 catch let jsonError as NSError {
                     // An error occurred while trying to convert the data into a Swift dictionary.
+                    
                     self.delegate.didNotGetWeather(jsonError)
                 }
                 
@@ -120,6 +121,7 @@ class OpenWeatherMap {
         //let weatherRequestURL = NSURL(string: "\(baseURL)?APPID=\(myAPIKey)&q=\(city)")!
         
         // The data task retrieves the data. {() in } syntax equivalent to dataTaskWithURL(weatherRequestURL, completion: {(.....) in ..handler func name or code directly....})
+        print("SENDING REQUEST: \n \(stationsRequestURL)")
         let dataTask = session.dataTaskWithURL(stationsRequestURL) {
             (data: NSData?, response: NSURLResponse?, error: NSError?) in
             if let error = error {
@@ -130,7 +132,8 @@ class OpenWeatherMap {
             else {
                 // Case 2: Success
                 // We got a response from the server!
-                
+            
+                print("RESPONSE: \n ")
                 do {
                     // Try to convert that JSON data into a Swift dictionary
                     let stations = try NSJSONSerialization.JSONObjectWithData(
@@ -145,7 +148,9 @@ class OpenWeatherMap {
                 }
                 catch let jsonError as NSError {
                     // An error occurred while trying to convert the data into a Swift dictionary.
-                    self.stationsDelegate.didNotGetStations(jsonError)
+                    //Dont do nathing maybe the reaponse is empty because we are in the ocean an tere are no stations
+                    print(jsonError)
+                    //self.stationsDelegate.didNotGetStations(jsonError)
                 }
                 
                 

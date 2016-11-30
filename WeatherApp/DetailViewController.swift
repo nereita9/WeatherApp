@@ -132,7 +132,7 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
             
             
         }
-        print("didNotGetWeather error: \(error)")
+       
     }
     
     func alertControllerBackgroundTapped() {

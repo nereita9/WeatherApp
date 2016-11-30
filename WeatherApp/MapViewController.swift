@@ -72,8 +72,23 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
     //gets call first time mapView is loading and each time mapView view changes
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         
+        
+        
 
         mRect = self.mapView.visibleMapRect
+        
+        //firstly remove annotations out of bounds, if dont the annotations will acumulate
+        let allAnnotations = self.mapView.annotations
+        for i in 0..<allAnnotations.count {
+            let point = MKMapPointForCoordinate(allAnnotations[i].coordinate)
+            if MKMapRectContainsPoint(mRect!, point) == false {
+                self.mapView.removeAnnotation(allAnnotations[i])
+
+            }
+        }
+        
+        
+      
         
         let bottomLeft: CLLocationCoordinate2D
         let topRight: CLLocationCoordinate2D
@@ -163,11 +178,24 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
 
             dispatch_async(dispatch_get_main_queue()) {
                 
-                 self.mapView.addAnnotation(annotation)
+                 //only add annotation if not exists already (the new map view rectangle may have some stations in common with the previous rectangle)
+                
+                var isAnnotationAlreadyAdded = false
+                for i in 0..<self.mapView.annotations.count {
+                    
+                    let currentAnnotation = self.mapView.annotations[i] as! CustomAnnotation
+                    if currentAnnotation.cityId == annotation.cityId {
+                        isAnnotationAlreadyAdded = true
+                        break
+                    }
+                }
+                if isAnnotationAlreadyAdded == false {
+                    self.mapView.addAnnotation(annotation)
+                }
                 
             }
-            
            
+
             
         }
         
@@ -194,7 +222,7 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
             
             
         }
-        print("didNotGetWeather error: \(error)")
+        //print("didNotGetWeather error: \(error)")
     }
 
     

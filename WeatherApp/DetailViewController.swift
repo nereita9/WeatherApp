@@ -20,6 +20,11 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
     
     @IBOutlet weak var nameLabel: UILabel!
     
+    @IBOutlet weak var locationImageView: UIImageView!
+    
+    @IBOutlet weak var humidityImageView: UIImageView!
+    
+    @IBOutlet weak var windImageView: UIImageView!
     
     var weather: OpenWeatherMap!
     var initDelegate = true
@@ -61,6 +66,18 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
         super.viewDidLoad()
         
         //when Favorites is empty in ipad landscape detail view is shown a little before launching maps, better see white screen that the default labels..
+        
+        self.locationImageView.image = self.locationImageView.image!.imageWithRenderingMode(.AlwaysTemplate)
+        self.locationImageView?.tintColor = UIColor.whiteColor()
+        
+        //self.humidityImageView.image = self.humidityImageView.image!.imageWithRenderingMode(.AlwaysTemplate)
+        //self.humidityImageView?.tintColor = UIColor.whiteColor()
+  
+        //self.windImageView.image = self.windImageView.image!.imageWithRenderingMode(.AlwaysTemplate)
+        //self.windImageView?.tintColor = UIColor.whiteColor()
+
+
+        
         self.nameLabel?.text = nil
         self.temperatureLabel?.text = nil
         self.weatherLabel?.text = nil
@@ -98,7 +115,7 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate {
         // that updates all the labels in a dispatch_async() call.
         dispatch_async(dispatch_get_main_queue()) {
             
-            self.nameLabel?.text = city.name
+            self.nameLabel?.text = city.name.uppercaseString //more style
             self.temperatureLabel?.text = String(city.temperature!)+" ºC"
             self.weatherLabel?.text = city.weather!.capitalizedString
             

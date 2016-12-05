@@ -14,8 +14,13 @@ class City: NSObject, NSCoding {
     //MARK: Properties
     let name: String
     let id: Int
+    let currentTemperature: Double?
+    let humidity: Int?
+    let wind: Double?
+    let minTemp:Double?
+    let maxTemp:Double?
     let weather: String?
-    let temperature: Double?
+
     var weatherPic: UIImage?
     var weatherIconID: String?
     var weatherColor: UIColor?
@@ -39,14 +44,28 @@ class City: NSObject, NSCoding {
         self.name = weatherData["name"] as! String
         self.id = weatherData["id"] as! Int
         
+
+
+        
         let mainDictionary = weatherData["main"] as! [String: AnyObject]
         let exactTemperature = (mainDictionary["temp"] as! Double) - 273.15 //in celsius
-        self.temperature = round(exactTemperature*10)/10 // only temperature with one decimal
+        let minTemperature = (mainDictionary["temp_min"] as! Double) - 273.15 //in celsius
+        let maxTemperature = (mainDictionary["temp_max"] as! Double) - 273.15 //in celsius
+        self.humidity = mainDictionary["humidity"] as? Int
+        self.currentTemperature = round(exactTemperature*10)/10 // only temperature with one decimal
+        self.minTemp = round(minTemperature*10)/10 // only temperature with one decimal
+        self.maxTemp = round(maxTemperature*10)/10 // only temperature with one decimal
+       
+        
+        let windDictionary = weatherData["wind"] as! [String: AnyObject]
+        let wind = (windDictionary["speed"] as! Double)
+        self.wind = round(wind*10)/10
+        
         
         let weatherArray = weatherData["weather"] as! [[String: AnyObject]]
         let weatherDictionary = weatherArray[0]
-        
         self.weather = weatherDictionary["description"] as? String
+        
         self.weatherIconID = weatherDictionary["icon"] as? String
         //preguntarlo cada vez en vez de guardarlo????
         self.weatherPic = nil
@@ -65,13 +84,17 @@ class City: NSObject, NSCoding {
         self.name = name
         self.id = id
     
-        self.temperature = nil
-
+        self.currentTemperature = nil
+        self.humidity = nil
+        self.wind = nil
+        self.minTemp = nil
+        self.maxTemp = nil
         self.weather = nil
+        
         self.weatherIconID = nil
 
         self.weatherPic = nil
- 
+        self.weatherColor = nil
     }
     
     

@@ -9,30 +9,26 @@
 import UIKit
 import MapKit
 
+//MARK: CityAdditionDelegate
+//Protocol that will be implemented by TableViewController
 protocol CityAdditionDelegate: class {
     func cityAddition(newCity: City)
 }
 
-class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMapViewDelegate {
+class MapViewController: UIViewController {
     
     //MARK: Properties
     @IBOutlet weak var mapView: MKMapView!
     
     weak var delegate: CityAdditionDelegate?
     var noCitiesInFavorites: Bool?
-    
     var mRect: MKMapRect?
-    
     var weather: OpenWeatherMap!
-    
     var city: City?
-    
     var selectedCity: String?
     var cityId: Int?
     
-    
-    
-    
+    //MARK: Actions
     @IBAction func mapsCancel(sender: UIBarButtonItem) {
         if noCitiesInFavorites == true {
             //if there are no cities in favorites user must select a city in the map, cannot cancel
@@ -40,15 +36,12 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
                 
                 let alertVC = UIAlertController(title: "You must select one city in the map", message: "There are no stored cities in Favorites.", preferredStyle: .Alert)
                 
-                
                 let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
                 
                 alertVC.addAction(okAction)
                 
                 self.presentViewController(alertVC, animated: true, completion: nil)
-                
-                
-                
+    
             }
 
         }
@@ -57,24 +50,23 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
         }
     }
     
+    //MARK: UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         weather = OpenWeatherMap(delegate: self)
         mapView.delegate = self
-        
-        
-    
+
     }
     
-    
+}
 
+//MARK: MKMapViewDelegate
+extension MapViewController: MKMapViewDelegate {
     
     //gets call first time mapView is loading and each time mapView view changes
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         
-        
-        
-
         mRect = self.mapView.visibleMapRect
         
         //firstly remove annotations out of bounds, if dont the annotations will acumulate
@@ -83,12 +75,9 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
             let point = MKMapPointForCoordinate(allAnnotations[i].coordinate)
             if MKMapRectContainsPoint(mRect!, point) == false {
                 self.mapView.removeAnnotation(allAnnotations[i])
-
+                
             }
         }
-        
-        
-      
         
         let bottomLeft: CLLocationCoordinate2D
         let topRight: CLLocationCoordinate2D
@@ -97,10 +86,9 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
         topRight = MKCoordinateForMapPoint(MKMapPointMake(MKMapRectGetMaxX(mRect!), mRect!.origin.y))
         
         weather.getSations(bottomLeft.longitude, latitudeP1: bottomLeft.latitude, longitudeP2: topRight.longitude, latitudeP2: topRight.latitude)
-  
-
         
     }
+    
     //to be able to have custom pin color
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation {
@@ -130,37 +118,28 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
         let annotation = view.annotation as! CustomAnnotation
         selectedCity = annotation.city
         cityId = annotation.cityId
-       
-        
         
         city = City(name: selectedCity!, id: cityId!)
         
-        //importantttt check if delegate implements protocol 
         self.delegate?.cityAddition(city!)
         self.dismissViewControllerAnimated(true, completion: nil)
         
-
-        
-        
-        
     }
-    
-    
+
+}
     
 
     
+
+
+//MARK: OpenWeatherMapStationsDelegate
+//MapViewController adopts the protocol defined in OpenWeatherMap
+extension MapViewController: OpenWeatherMapStationsDelegate {
+
     func didGetStations(stations: [String: AnyObject]) {
-        // This method is called asynchronously, which means it won't execute in the main queue.
-        // ALl UI code needs to execute in the main queue, which is why we're wrapping the code
-        // that updates all the labels in a dispatch_async() call.
-        
-        //print(stations)
         
         let stationsCount = stations["cnt"] as! Int
         let stationsList = stations["list"] as! [[String: AnyObject]]
-        
-        //print(stationsCount)
-         //print("-----------------------------------------------------")
         
         for i in 0..<stationsCount {
             let lon = stationsList[i]["coord"]!["lon"] as! Double
@@ -168,17 +147,14 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
             let name = stationsList[i]["name"] as! String
             let id = stationsList[i]["id"] as! Int
             
-            //print("\(name): \(lat), \(lon)")
-            
-            
             let annotation = CustomAnnotation(city: name, cityId: id, pinColor: UIColor.purpleColor())
             annotation.coordinate = CLLocationCoordinate2DMake(lat, lon)
             annotation.title = name
             
-
+            
             dispatch_async(dispatch_get_main_queue()) {
                 
-                 //only add annotation if not exists already (the new map view rectangle may have some stations in common with the previous rectangle)
+                //only add annotation if not exists already (the new map view rectangle may have some stations in common with the previous rectangle)
                 
                 var isAnnotationAlreadyAdded = false
                 for i in 0..<self.mapView.annotations.count {
@@ -194,20 +170,13 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
                 }
                 
             }
-           
-
             
         }
         
-        // print("-----------------------------------------------------")
-
-
     }
     
     func didNotGetStations(error: NSError) {
-        // This method is called asynchronously, which means it won't execute in the main queue.
-        // ALl UI code needs to execute in the main queue, which is why we're wrapping the call
-        // to showSimpleAlert(title:message:) in a dispatch_async() call.
+        
         dispatch_async(dispatch_get_main_queue()) {
             
             let alertVC = UIAlertController(title: "Can't get the weather stations", message: "The weather service isn't responding.", preferredStyle: .Alert)
@@ -219,18 +188,10 @@ class MapViewController: UIViewController, OpenWeatherMapStationsDelegate, MKMap
             
             self.presentViewController(alertVC, animated: true, completion: nil)
             
-            
-            
         }
-        //print("didNotGetWeather error: \(error)")
     }
 
-    
-
-
-    
 }
-
 
 
 

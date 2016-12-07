@@ -8,160 +8,45 @@
 
 import UIKit
 
-
-
+//MARK: CitySelectionDelegate
+//Protocol that will be adopted by DetailViewController
 protocol CitySelectionDelegate: class {
     func citySelected(newCity: City)
 }
 
 class TableViewController: UITableViewController{
     
-   
+    //MARK: Properties
     
     var currentSelectedIndexPath: NSIndexPath?
-    
-    var cities = [City]()
-    
-    
-    var city: City! {
-        didSet (newCity){
-            
-            self.refreshTable()
-            
-            self.presentDetailViewControllerWithSelectedCity()
-            
-        }
-    }
-    
-
-    
-    func refreshTable(){
-        
-        
-        for i in 0..<cities.count {
-            //if the city the user wants to add is already saved in favorites
-            if cities[i].id == city.id {
-                
-                let existingCity = cities[i]
-                
-                // we put the city at the top
-                self.cities.removeAtIndex(i)
-                self.cities.insert(existingCity, atIndex: 0)
-                
-                tableView.reloadData()
-                
-                //save cities in MEM
-                saveCities()
-                
-                
-                
-                self.delegate?.citySelected(existingCity)
-                
-                return
-            }
-        }
-
-        //If we reach this point the city not exists already
- 
-        self.cities.insert(city, atIndex: 0)
-        
-        tableView.reloadData()
-        
-        //save cities in MEM
-        saveCities()
-        
-        
-        self.delegate?.citySelected(city)
-            
-        
-        
-        
-    }
-    
-    func presentDetailViewControllerWithSelectedCity(){
-        
-        if let detailViewController = self.delegate as? DetailViewController {
-            
-            
-            
-            
-            if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) || (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().nativeBounds.height == 2208 ) ){
-
-                //hide master view (table view) when clicking. In ipad portrait
-                if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) && (UIDevice.currentDevice().orientation == .Portrait || UIDevice.currentDevice().orientation == .PortraitUpsideDown)){
-                    
-                    
-                    UIView.animateWithDuration(0.3, animations: {
-                        self.splitViewController?.preferredDisplayMode = .PrimaryHidden
-                        }, completion: { finished in
-                            //restore
-                            self.splitViewController?.preferredDisplayMode = .Automatic
-                    })
-  
-                    
-                }
-                else {
-                    // print("ipad or iphone 6 plus")
-                    
-                    splitViewController?.showDetailViewController(detailViewController.navigationController!,sender: nil)
-                }
-                
-                
-            }
-            else {
-                //MARK:super important
-                //show the detailviewcontroller instead of the navigation controller to avoid the size classes variation probles
-                //print("iphone")
-                splitViewController?.showDetailViewController(detailViewController, sender: nil)
-            }
-        }
-
-    }
-
-
-    
     weak var delegate: CitySelectionDelegate?
-    
     var weather: OpenWeatherMap!
-    
     var firstLaunch = true
     
     @IBOutlet weak var addButton: UIBarButtonItem!
     
-        
-    
-    //MARK: Navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        
-        let mapNavViewController = segue.destinationViewController as! UINavigationController
-        let mapViewController = mapNavViewController.topViewController as! MapViewController
-        mapViewController.delegate = self
-       
-        if sender === addButton {
-            mapViewController.title = "Map"
-            mapViewController.noCitiesInFavorites = false
-
-        }
-        else if sender === self {
-            mapViewController.title = "Select one City"
-            mapViewController.noCitiesInFavorites = true
-
+    var cities = [City]()
+    var city: City! {
+        didSet (newCity){
+            //when user add new city from MapViewController
+            self.refreshTable()
+            self.presentDetailViewControllerWithSelectedCity()
         }
     }
     
-    //this willbe loaded from a storyboard
+    //MARK: StoryBoard initilizer
+    
+    //this will be loaded from a storyboard
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        
-        //load any saved meals, otherwise load sample data
+        //load any saved meals
         if let savedCities = loadCities() {
             
             if savedCities.count > 0 {
                  cities+=savedCities
- 
+                
             }
-
         }
     }
     
@@ -184,44 +69,31 @@ class TableViewController: UITableViewController{
 
     }
     
-    
-    
+    //MARK: UIViewController
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+
         //tableview is not ready at viewdidload
         
         //if there is at least one city saved each time the table appears we mark the last cell the user selected
         if self.cities.first != nil{
+            
             //the first row is the last city selected as in cellForRowAtIndexPath we configure the selected cell to go on top
             currentSelectedIndexPath = NSIndexPath(forRow: 0, inSection: 0)
             tableView.selectRowAtIndexPath(currentSelectedIndexPath, animated: true, scrollPosition: .Top)
-           
-            //let firstSelectedCell = tableView.cellForRowAtIndexPath(currentSelectedIndexPath!)! as UITableViewCell
-            //firstSelectedCell.backgroundColor = UIColor.blueColor()
-        }
-        
 
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        // editbutton in the navigation bar for deleting
+        // edit button in the navigation bar for deleting
         self.navigationItem.leftBarButtonItem = self.editButtonItem()
-        
 
     }
 
-    
-
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
     // MARK: - Table view data source
 
@@ -237,12 +109,9 @@ class TableViewController: UITableViewController{
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
         
-        // Configure the cell...
+        // Configure the cell
         let city = self.cities[indexPath.row]
         cell.textLabel?.text = city.name
-        
-        //this will make the scroll begin in the top
-        //tableView.setContentOffset(CGPointZero, animated: true)
         
         return cell
     }
@@ -258,17 +127,15 @@ class TableViewController: UITableViewController{
         self.cities.removeAtIndex(indexPath.row)
         self.cities.insert(selectedCity, atIndex: 0)
         
+        //save cities in MEM
         saveCities()
         
         self.delegate?.citySelected(selectedCity)
         
         self.presentDetailViewControllerWithSelectedCity()
-        
-       
 
     }
      
-
     
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -277,22 +144,25 @@ class TableViewController: UITableViewController{
     }
     
 
-    
     // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
+            
             // Delete the row from the data source
             cities.removeAtIndex(indexPath.row)
             
             //if the user removes the selected city, the first city
             if indexPath.row == 0 {
+                
                 if cities.count > 0 {
+                    
                     //if there are still cities, launch detail view with the new first city
                     let newSelectedCity = self.cities[indexPath.row]
                     self.delegate?.citySelected(newSelectedCity)
                     self.presentDetailViewControllerWithSelectedCity()
                 }
                 else {
+                    
                     //if user removed all the cities, launch map to let user select another city
                     self.performSegueWithIdentifier("mapSegue", sender: self)
                 }
@@ -303,13 +173,9 @@ class TableViewController: UITableViewController{
             
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
     }
     
-
-  
     
     //MARK: NSCoding
     func saveCities() {
@@ -320,10 +186,101 @@ class TableViewController: UITableViewController{
     func loadCities() -> [City]? {
         return NSKeyedUnarchiver.unarchiveObjectWithFile(City.ArchiveURL.path!) as? [City]
     }
-
+    
+    //MARK: Navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        let mapNavViewController = segue.destinationViewController as! UINavigationController
+        let mapViewController = mapNavViewController.topViewController as! MapViewController
+        mapViewController.delegate = self
+        
+        if sender === addButton {
+            mapViewController.title = "Map"
+            mapViewController.noCitiesInFavorites = false
+            
+        }
+        else if sender === self {
+            mapViewController.title = "Select one City"
+            mapViewController.noCitiesInFavorites = true
+            
+        }
+    }
+    
+    //MARK: Custom functions
+    
+    func refreshTable(){
+        
+        for i in 0..<cities.count {
+            //if the city the user wants to add is already saved in favorites
+            if cities[i].id == city.id {
+                
+                let existingCity = cities[i]
+                // we put the city at the top
+                self.cities.removeAtIndex(i)
+                self.cities.insert(existingCity, atIndex: 0)
+                
+                tableView.reloadData()
+                
+                //save cities in MEM
+                saveCities()
+                
+                self.delegate?.citySelected(existingCity)
+                
+                return
+            }
+        }
+        
+        //If we reach this point the city not exists already
+        
+        self.cities.insert(city, atIndex: 0)
+        tableView.reloadData()
+        
+        //save cities in MEM
+        saveCities()
+        
+        self.delegate?.citySelected(city)
+        
+    }
+    
+    func presentDetailViewControllerWithSelectedCity(){
+        
+        if let detailViewController = self.delegate as? DetailViewController {
+            
+            //Ipad or Iphone 6(s) plus
+            if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) || (UIDevice.currentDevice().userInterfaceIdiom == .Phone && UIScreen.mainScreen().nativeBounds.height == 2208 ) ){
+                
+                
+                //Ipad portrait
+                if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) && (UIDevice.currentDevice().orientation == .Portrait || UIDevice.currentDevice().orientation == .PortraitUpsideDown)){
+                    //Hide master view (table view) when clicking. In i
+                    UIView.animateWithDuration(0.3, animations: {
+                        self.splitViewController?.preferredDisplayMode = .PrimaryHidden
+                        }, completion: { finished in
+                            //restore
+                            self.splitViewController?.preferredDisplayMode = .Automatic
+                    })
+                    
+                    
+                }
+                    
+                else {
+                    splitViewController?.showDetailViewController(detailViewController.navigationController!,sender: nil)
+                }
+                
+                
+            }
+            else {
+                
+                //show the detailviewcontroller instead of the navigation controller to avoid the size classes variation problems
+                splitViewController?.showDetailViewController(detailViewController, sender: nil)
+            }
+        }
+        
+    }
     
 }
-
+//MARK: CityAdditionDelegate
+//TableViewController adopts the protocol defined in MapViewController
 extension TableViewController: CityAdditionDelegate{
     func cityAddition(newCity: City) {
         

@@ -1,5 +1,5 @@
 //
-//  Weather.swift
+//  City.swift
 //  WeatherApp
 //
 //  Created by Nerea Gonzalez Vazquez on 15/11/16.
@@ -39,14 +39,12 @@ class City: NSObject, NSCoding {
     }
 
     
-    //MARK: Initialization
-    
+    //MARK: Initializers
     init(weatherData: [String: AnyObject]) {
+        
+        //Assign the desired information obtained from the dictionary "weatherData"
         self.name = weatherData["name"] as! String
         self.id = weatherData["id"] as! Int
-        
-
-
         
         let mainDictionary = weatherData["main"] as! [String: AnyObject]
         let exactTemperature = (mainDictionary["temp"] as! Double) - 273.15 //in celsius
@@ -56,19 +54,17 @@ class City: NSObject, NSCoding {
         self.currentTemperature = round(exactTemperature*10)/10 // only temperature with one decimal
         self.minTemp = round(minTemperature*10)/10 // only temperature with one decimal
         self.maxTemp = round(maxTemperature*10)/10 // only temperature with one decimal
-       
         
         let windDictionary = weatherData["wind"] as! [String: AnyObject]
         let wind = (windDictionary["speed"] as! Double)
-        self.wind = round(wind*10)/10
-        
+        self.wind = round(wind*10)/10 // only wind with one decimal
         
         let weatherArray = weatherData["weather"] as! [[String: AnyObject]]
         let weatherDictionary = weatherArray[0]
         self.weather = weatherDictionary["description"] as? String
         
         self.weatherIconID = weatherDictionary["icon"] as? String
-        //preguntarlo cada vez en vez de guardarlo????
+        
         self.weatherPic = nil
         self.weatherPicName = nil
         self.weatherColor = nil
@@ -104,7 +100,7 @@ class City: NSObject, NSCoding {
     
     
     
-    //method for fetching a weather image
+    //method for fetching the weather picture
     func weatherPicFunc() -> (UIImage, String) {
 
         switch self.weatherIconID! {
@@ -125,7 +121,7 @@ class City: NSObject, NSCoding {
         }
     }
     
-     //method for fetching a weather color
+     //method for fetching the weather background color
     func weatherColorFunc() -> UIColor {
         
         switch self.weatherIconID! {
@@ -153,14 +149,12 @@ class City: NSObject, NSCoding {
     }
 
 
-    
-    
     //MARK: NSCoding
     func encodeWithCoder(aCoder: NSCoder) {
+        
+        //we only store name and id as we only show city names in the master view controller table
         aCoder.encodeObject(name, forKey: PropertyKey.nameKey)
         aCoder.encodeObject(id, forKey: PropertyKey.idKey)
-        
-        
 
     }
     

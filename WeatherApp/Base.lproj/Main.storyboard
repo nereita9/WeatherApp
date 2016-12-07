@@ -21,20 +21,26 @@
                         <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="TjJ-os-jTy" userLabel="CityTimeStackView">
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="TjJ-os-jTy" userLabel="CityTimeStackView">
                                 <rect key="frame" x="45" y="20" width="535" height="44"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PyI-qf-Ny1">
-                                        <rect key="frame" x="0.0" y="0.0" width="321" height="44"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="PyI-qf-Ny1">
+                                        <rect key="frame" x="0.0" y="-22" width="0.0" height="22"/>
                                         <fontDescription key="fontDescription" name="GillSans-SemiBold" family="Gill Sans" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
+                                        <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                                            <rect key="frame" x="0.0" y="-22" width="0.0" height="22"/>
+                                        </variation>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8fz-gh-1rp">
-                                        <rect key="frame" x="321" y="0.0" width="214" height="44"/>
-                                        <fontDescription key="fontDescription" name="GillSans-SemiBold" family="Gill Sans" pointSize="13"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" textAlignment="right" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="8fz-gh-1rp">
+                                        <rect key="frame" x="0.0" y="-20" width="0.0" height="18"/>
+                                        <fontDescription key="fontDescription" name="GillSans-SemiBold" family="Gill Sans" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
+                                        <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                                            <rect key="frame" x="0.0" y="-20" width="0.0" height="18"/>
+                                        </variation>
                                     </label>
                                 </subviews>
                                 <constraints>
@@ -117,20 +123,6 @@
                                     <rect key="frame" x="20" y="162" width="140" height="68"/>
                                 </variation>
                             </stackView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="location" translatesAutoresizingMaskIntoConstraints="NO" id="Bhy-bm-RDK" userLabel="locationIconImageView">
-                                <rect key="frame" x="20" y="32" width="20" height="20"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="Bhy-bm-RDK" secondAttribute="height" multiplier="1:1" id="5tb-pc-p8A"/>
-                                    <constraint firstAttribute="height" constant="20" id="i0m-Ow-TP4"/>
-                                </constraints>
-                            </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="O1x-ar-iLJ">
-                                <rect key="frame" x="20" y="112" width="268" height="268"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="O1x-ar-iLJ" secondAttribute="height" multiplier="1:1" id="I83-zh-IHZ"/>
-                                </constraints>
-                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="right" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="currentT" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nKj-kk-VLP" userLabel="currentTemperature">
                                 <rect key="frame" x="312" y="112" width="268" height="134"/>
                                 <constraints>
@@ -158,19 +150,19 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="dTK-bO-2Kx" userLabel="TempWeatherDateStackView">
                                 <rect key="frame" x="20" y="436" width="560" height="80"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="8xi-xr-V4a" userLabel="wRhA_TempWeatherStackView">
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="8xi-xr-V4a" userLabel="wRhA_TempWeatherStackView">
                                         <rect key="frame" x="0.0" y="0.0" width="560" height="34"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temperature" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PXt-JS-X4Q" userLabel="wRhA_Temperature">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temperature" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PXt-JS-X4Q" userLabel="wRhA_Temperature">
                                                 <rect key="frame" x="0.0" y="0.0" width="333" height="34"/>
                                                 <fontDescription key="fontDescription" name="GillSans-SemiBold" family="Gill Sans" pointSize="12"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
-                                                <variation key="heightClass=compact" misplaced="YES">
-                                                    <rect key="frame" x="0.0" y="0.0" width="333" height="19"/>
-                                                </variation>
                                                 <variation key="widthClass=regular" misplaced="YES">
                                                     <rect key="frame" x="0.0" y="0.0" width="452" height="34"/>
+                                                </variation>
+                                                <variation key="heightClass=compact-widthClass=regular" misplaced="YES">
+                                                    <rect key="frame" x="0.0" y="0.0" width="452" height="19"/>
                                                 </variation>
                                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                                     <rect key="frame" x="0.0" y="0.0" width="214" height="36"/>
@@ -181,11 +173,11 @@
                                                 <fontDescription key="fontDescription" name="GillSans-SemiBold" family="Gill Sans" pointSize="12"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                 <nil key="highlightedColor"/>
-                                                <variation key="heightClass=compact" misplaced="YES">
-                                                    <rect key="frame" x="333" y="0.0" width="227" height="19"/>
-                                                </variation>
                                                 <variation key="widthClass=regular" misplaced="YES">
                                                     <rect key="frame" x="452" y="0.0" width="308" height="34"/>
+                                                </variation>
+                                                <variation key="heightClass=compact-widthClass=regular" misplaced="YES">
+                                                    <rect key="frame" x="452" y="0.0" width="308" height="19"/>
                                                 </variation>
                                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                                     <rect key="frame" x="214" y="0.0" width="146" height="36"/>
@@ -196,11 +188,11 @@
                                             <constraint firstAttribute="trailing" secondItem="Tgd-az-oUg" secondAttribute="trailing" id="YbH-r0-XFH"/>
                                             <constraint firstItem="PXt-JS-X4Q" firstAttribute="leading" secondItem="8xi-xr-V4a" secondAttribute="leading" id="gk2-7U-i1J"/>
                                         </constraints>
-                                        <variation key="heightClass=compact" misplaced="YES">
-                                            <rect key="frame" x="0.0" y="0.0" width="560" height="19"/>
-                                        </variation>
                                         <variation key="widthClass=regular" misplaced="YES">
                                             <rect key="frame" x="0.0" y="0.0" width="760" height="34"/>
+                                        </variation>
+                                        <variation key="heightClass=compact-widthClass=regular" misplaced="YES">
+                                            <rect key="frame" x="0.0" y="0.0" width="760" height="19"/>
                                         </variation>
                                         <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                             <rect key="frame" x="0.0" y="0.0" width="360" height="36"/>
@@ -213,11 +205,11 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="3" id="xYP-AP-X7o"/>
                                         </constraints>
-                                        <variation key="heightClass=compact" misplaced="YES">
-                                            <rect key="frame" x="0.0" y="24" width="560" height="3"/>
-                                        </variation>
                                         <variation key="widthClass=regular" misplaced="YES">
                                             <rect key="frame" x="0.0" y="39" width="760" height="3"/>
+                                        </variation>
+                                        <variation key="heightClass=compact-widthClass=regular" misplaced="YES">
+                                            <rect key="frame" x="0.0" y="24" width="760" height="3"/>
                                         </variation>
                                         <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                             <rect key="frame" x="0.0" y="41" width="360" height="3"/>
@@ -228,11 +220,11 @@
                                         <fontDescription key="fontDescription" name="GillSans-SemiBold" family="Gill Sans" pointSize="12"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
-                                        <variation key="heightClass=compact" misplaced="YES">
-                                            <rect key="frame" x="0.0" y="32" width="560" height="18"/>
-                                        </variation>
                                         <variation key="widthClass=regular" misplaced="YES">
                                             <rect key="frame" x="0.0" y="47" width="760" height="33"/>
+                                        </variation>
+                                        <variation key="heightClass=compact-widthClass=regular" misplaced="YES">
+                                            <rect key="frame" x="0.0" y="32" width="760" height="18"/>
                                         </variation>
                                         <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                             <rect key="frame" x="0.0" y="49" width="360" height="35"/>
@@ -256,6 +248,20 @@
                                     <rect key="frame" x="20" y="632" width="360" height="84"/>
                                 </variation>
                             </stackView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="location" translatesAutoresizingMaskIntoConstraints="NO" id="Bhy-bm-RDK" userLabel="locationIconImageView">
+                                <rect key="frame" x="20" y="32" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="Bhy-bm-RDK" secondAttribute="height" multiplier="1:1" id="5tb-pc-p8A"/>
+                                    <constraint firstAttribute="height" constant="20" id="i0m-Ow-TP4"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="O1x-ar-iLJ">
+                                <rect key="frame" x="20" y="112" width="268" height="268"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="O1x-ar-iLJ" secondAttribute="height" multiplier="1:1" id="I83-zh-IHZ"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -282,7 +288,7 @@
                                 <variation key="heightClass=compact-widthClass=regular" constant="0.0"/>
                             </constraint>
                             <constraint firstItem="O1x-ar-iLJ" firstAttribute="height" relation="lessThanOrEqual" secondItem="j1a-fU-TQ8" secondAttribute="height" multiplier="0.5" id="LV8-qx-9vY"/>
-                            <constraint firstItem="O1x-ar-iLJ" firstAttribute="width" relation="lessThanOrEqual" secondItem="j1a-fU-TQ8" secondAttribute="width" multiplier="0.7" id="TUp-jr-wBI"/>
+                            <constraint firstItem="O1x-ar-iLJ" firstAttribute="width" relation="lessThanOrEqual" secondItem="j1a-fU-TQ8" secondAttribute="width" multiplier="0.6" id="TUp-jr-wBI"/>
                             <constraint firstItem="O1x-ar-iLJ" firstAttribute="centerX" secondItem="j1a-fU-TQ8" secondAttribute="centerX" id="TzQ-WX-Mbc"/>
                             <constraint firstItem="TYz-bI-BdJ" firstAttribute="leading" secondItem="j1a-fU-TQ8" secondAttribute="leadingMargin" id="WUr-fh-LIP"/>
                             <constraint firstItem="nKj-kk-VLP" firstAttribute="width" secondItem="O1x-ar-iLJ" secondAttribute="width" id="YsY-pr-gbt"/>
@@ -294,6 +300,7 @@
                             <constraint firstItem="dTK-bO-2Kx" firstAttribute="height" secondItem="O1x-ar-iLJ" secondAttribute="height" multiplier="0.3" id="gWP-cI-bY4"/>
                             <constraint firstItem="EXn-pi-c8k" firstAttribute="height" secondItem="O1x-ar-iLJ" secondAttribute="height" multiplier="0.12" id="gxX-XY-TYH"/>
                             <constraint firstItem="dTK-bO-2Kx" firstAttribute="leading" secondItem="j1a-fU-TQ8" secondAttribute="leadingMargin" id="isU-7R-U93"/>
+                            <constraint firstItem="TjJ-os-jTy" firstAttribute="centerY" secondItem="Bhy-bm-RDK" secondAttribute="centerY" id="kg0-1h-cn7"/>
                             <constraint firstItem="TYz-bI-BdJ" firstAttribute="top" secondItem="O1x-ar-iLJ" secondAttribute="centerY" constant="5" id="loI-Rn-LbU"/>
                             <constraint firstItem="nKj-kk-VLP" firstAttribute="bottom" secondItem="O1x-ar-iLJ" secondAttribute="top" constant="10" id="n9a-1Y-O3m">
                                 <variation key="widthClass=compact" constant="-10"/>
@@ -302,9 +309,6 @@
                             <constraint firstItem="Bhy-bm-RDK" firstAttribute="leading" secondItem="j1a-fU-TQ8" secondAttribute="leadingMargin" id="nxm-h1-FCN"/>
                             <constraint firstItem="TjJ-os-jTy" firstAttribute="leading" secondItem="Bhy-bm-RDK" secondAttribute="trailing" constant="5" id="tLD-Sb-EoY"/>
                             <constraint firstItem="nKj-kk-VLP" firstAttribute="height" secondItem="O1x-ar-iLJ" secondAttribute="height" multiplier="0.5" id="vOv-Pm-p5U"/>
-                            <constraint firstItem="Bhy-bm-RDK" firstAttribute="top" secondItem="j1a-fU-TQ8" secondAttribute="topMargin" constant="32" id="yQh-wc-jaA">
-                                <variation key="heightClass=compact" constant="17"/>
-                            </constraint>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -380,6 +384,7 @@
                         <outlet property="humidityLabel" destination="CuV-ty-XXh" id="iz3-U0-HW8"/>
                         <outlet property="iconImageView" destination="O1x-ar-iLJ" id="JZC-kI-MSL"/>
                         <outlet property="locationImageView" destination="Bhy-bm-RDK" id="TLz-nj-w4q"/>
+                        <outlet property="locationImageViewHeight" destination="i0m-Ow-TP4" id="J4J-jB-mvW"/>
                         <outlet property="nameLabel" destination="PyI-qf-Ny1" id="dze-QQ-p15"/>
                         <outlet property="temperatureLabel" destination="PXt-JS-X4Q" id="MOi-ug-Loa"/>
                         <outlet property="timeLabel" destination="8fz-gh-1rp" id="LAB-WW-wfw"/>

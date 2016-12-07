@@ -22,6 +22,7 @@ class City: NSObject, NSCoding {
     let weather: String?
 
     var weatherPic: UIImage?
+    var weatherPicName: String?
     var weatherIconID: String?
     var weatherColor: UIColor?
 
@@ -69,12 +70,14 @@ class City: NSObject, NSCoding {
         self.weatherIconID = weatherDictionary["icon"] as? String
         //preguntarlo cada vez en vez de guardarlo????
         self.weatherPic = nil
+        self.weatherPicName = nil
         self.weatherColor = nil
 
         //need to call the superclass nscoding initializer
         super.init()
         
-        self.weatherPic = weatherPicFunc()
+        self.weatherPic = weatherPicFunc().0
+        self.weatherPicName = weatherPicFunc().1
         self.weatherColor = weatherColorFunc()
 
         
@@ -94,6 +97,7 @@ class City: NSObject, NSCoding {
         self.weatherIconID = nil
 
         self.weatherPic = nil
+        self.weatherPicName = nil
         self.weatherColor = nil
     }
     
@@ -101,22 +105,23 @@ class City: NSObject, NSCoding {
     
     
     //method for fetching a weather image
-    func weatherPicFunc() -> UIImage {
+    func weatherPicFunc() -> (UIImage, String) {
+
         switch self.weatherIconID! {
         case "03d", "03n":
-            return UIImage(named: "03dn.png")!
+            return (UIImage(named: "03dn.png")!, "03dn")
         case "04d", "04n":
-            return UIImage(named: "04dn.png")!
+            return (UIImage(named: "04dn.png")!, "04dn")
         case "09d", "09n":
-            return UIImage(named: "09dn.png")!
+            return (UIImage(named: "09dn.png")!, "09dn")
         case "11d", "11n":
-            return UIImage(named: "11dn.png")!
+            return (UIImage(named: "11dn.png")!, "11dn")
         case "13d", "13n":
-            return UIImage(named: "13dn.png")!
+            return (UIImage(named: "13dn.png")!, "13dn")
         case "50d", "50n":
-            return UIImage(named: "50dn.png")!
+            return (UIImage(named: "50dn.png")!, "50dn")
         default:
-            return UIImage(named: "\(self.weatherIconID!).png")!
+            return (UIImage(named: "\(self.weatherIconID!).png")!, self.weatherIconID!)
         }
     }
     

@@ -15,7 +15,6 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate{
 
     @IBOutlet weak var iconImageView: UIImageView!
     
-    
     @IBOutlet weak var nameLabel: UILabel!
     
     @IBOutlet weak var timeLabel: UILabel!
@@ -34,11 +33,17 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate{
     @IBOutlet weak var humidityImageView: UIImageView!
     
     @IBOutlet weak var windImageView: UIImageView!
+    //MARK: Constraints
+    @IBOutlet weak var locationImageViewHeight: NSLayoutConstraint!
+    
+
     
     var timer = NSTimer()
     
     var weather: OpenWeatherMap!
     var initDelegate = true
+    var picName: String?
+    var tempLabelFontSize: CGFloat?
     
     //necessary because in ipad the tableView is in the same view as the detailview, so it is not enought to update in viewdidload
     var city: City! {
@@ -85,10 +90,10 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate{
         super.viewDidLoad()
        
         //timer for the time
+        self.tick()
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(tick), userInfo: nil, repeats: true)
         
-        self.setupFontSizeDependingOnScale()
-      
+        
         
         //when Favorites is empty in ipad landscape detail view is shown a little before launching maps, better see white screen that the default labels..
         
@@ -121,10 +126,29 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate{
         //observe when the application will go to background       
         NSNotificationCenter.defaultCenter().addObserver(
         self, selector: #selector(self.applicationWillResignActive(_:)), name: UIApplicationWillResignActiveNotification, object: nil)
-            }
+        
+        self.setupFontSizeAndSomeConstraintsDependingOnScale()
+        tempLabelFontSize = self.temperatureLabel.font.pointSize
+        
+       
+    }
     
     
-
+    
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        
+        //iphone in portrait
+        if size.height > size.width && UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            
+            print("\(picName!)_iPhonePortrait.png")
+            self.iconImageView?.image = UIImage(named: "\(picName!)_iPhonePortrait.png")
+            self.iconImageView?.image = self.iconImageView?.image!.imageWithRenderingMode(.AlwaysTemplate)
+            self.iconImageView?.tintColor = UIColor.whiteColor()
+        }
+        
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -141,16 +165,36 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate{
         // This method is called asynchronously, which means it won't execute in the main queue.
         // ALl UI code needs to execute in the main queue, which is why we're wrapping the code
         // that updates all the labels in a dispatch_async() call.
+        
+        self.picName = city.weatherPicName!
+        
         dispatch_async(dispatch_get_main_queue()) {
             
             self.nameLabel?.text = city.name.uppercaseString //more style
-            self.currentTemperatureLabel?.text = String(city.currentTemperature!)+" ºC"
+            self.currentTemperatureLabel?.text = String(city.currentTemperature!)+"ºC"
             self.humidityLabel?.text = String(city.humidity!)+" %"
             self.windLabel?.text = String(city.wind!)+" m/s"
-            self.temperatureLabel?.text = String(city.maxTemp!)+" / "+String(city.minTemp!)+" ºC"
-            self.weatherLabel?.text = city.weather!.capitalizedString
-            //self.weatherLabel?.text = "Heavy Shower Rain and Drizzle"
-            self.iconImageView?.image = city.weatherPic!
+            
+            let maxTemp = String(city.maxTemp!)+"º"
+            let totalTemp = maxTemp+" / "+String(city.minTemp!)+"ºC"
+            let maxTempRange = (totalTemp as NSString).rangeOfString(maxTemp)
+            
+           
+            
+            let attributedString = NSMutableAttributedString(string: totalTemp, attributes: [NSFontAttributeName: UIFont(name: "GillSans-SemiBold", size: self.tempLabelFontSize!)!])
+            attributedString.setAttributes([NSFontAttributeName: UIFont(name: "GillSans-SemiBold", size: self.tempLabelFontSize!+6)!], range: maxTempRange)
+            self.temperatureLabel?.attributedText = attributedString
+            
+            //self.weatherLabel?.text = city.weather!.capitalizedString
+            self.weatherLabel?.text = "Heavy Shower Rain and Drizzle"
+            if self.traitCollection.horizontalSizeClass == .Compact && self.traitCollection.verticalSizeClass != .Compact {
+                
+                self.iconImageView?.image = UIImage(named: "\(city.weatherPicName!)_iPhonePortrait.png")!
+            }
+            else {
+                self.iconImageView?.image = city.weatherPic!
+                
+            }
             self.iconImageView?.image = self.iconImageView?.image!.imageWithRenderingMode(.AlwaysTemplate)
             self.iconImageView?.tintColor = UIColor.whiteColor()
             
@@ -219,8 +263,6 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate{
         dateFormatter.dateFormat = "yyyy" //the year with four digits
         let year = dateFormatter.stringFromDate(dateTime)
 
-
-
         
         self.timeLabel.text = "\(hour):\(minute)"
         self.dateLabel.text = "\(weekDay) \(day) \(month) \(year)"
@@ -249,46 +291,73 @@ class DetailViewController: UIViewController, OpenWeatherMapDelegate{
 
     
     //MARK: fontSize
-    func setupFontSizeDependingOnScale() {
+    func setupFontSizeAndSomeConstraintsDependingOnScale() {
         let nameFontSize: CGFloat
         let timeFontSize: CGFloat
         let currentTFontSize: CGFloat
         let defaultFontSize: CGFloat
+        
+        let locationImageHeight: CGFloat
+   
+        
         if UIScreen.mainScreen().scale == 2.0 {
             print("scale 2.0")
             //Retina display
-            nameFontSize = 17
-            timeFontSize = 13
-            defaultFontSize = 12
-            currentTFontSize = 30
+            nameFontSize = 19
+            timeFontSize = 15
+            defaultFontSize = 14
+            currentTFontSize = 32
+            
+            locationImageHeight = 18
+            
+ 
+          
         }
         else if UIScreen.mainScreen().scale == 3.0{
             print("scale 3.0")
 
             //iphone 6 plus
-            nameFontSize = 25.5
-            timeFontSize = 19.5
+            nameFontSize = 25
+            timeFontSize = 19
             defaultFontSize = 18
             currentTFontSize = 45
+            
+            locationImageHeight = 25
+           
+            
         }
         else {
             print("scale 1.0")
 
-            nameFontSize = 8.5
-            timeFontSize = 6.5
-            defaultFontSize = 6
-            currentTFontSize = 15
+            nameFontSize = 32
+            timeFontSize = 26
+            defaultFontSize = 24
+            currentTFontSize = 60
+            
+            locationImageHeight = 30
+           
         }
        
         
         self.nameLabel?.font = nameLabel.font.fontWithSize(nameFontSize)
+        self.nameLabel?.minimumScaleFactor = 0.5
+        self.nameLabel?.adjustsFontSizeToFitWidth = true
+        
+        
         self.timeLabel?.font = timeLabel.font.fontWithSize(timeFontSize)
         self.currentTemperatureLabel?.font = currentTemperatureLabel.font.fontWithSize(currentTFontSize)
         self.humidityLabel?.font = humidityLabel.font.fontWithSize(defaultFontSize)
         self.windLabel?.font = windLabel.font.fontWithSize(defaultFontSize)
         self.temperatureLabel?.font = temperatureLabel.font.fontWithSize(defaultFontSize)
+        
         self.weatherLabel?.font = weatherLabel.font.fontWithSize(defaultFontSize)
+        self.weatherLabel?.minimumScaleFactor = 0.3
+        self.weatherLabel?.adjustsFontSizeToFitWidth = true
+        
         self.dateLabel?.font = dateLabel.font.fontWithSize(defaultFontSize)
+        
+        self.locationImageViewHeight.constant = locationImageHeight
+        
 
     }
 

@@ -16,7 +16,6 @@
 		CB98DDE61DDB4CE100C80E27 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB98DDE51DDB4CE100C80E27 /* TableViewController.swift */; };
 		CB98DDE81DDB4E1200C80E27 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB98DDE71DDB4E1200C80E27 /* DetailViewController.swift */; };
 		CB98DDEA1DDB535800C80E27 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB98DDE91DDB535800C80E27 /* City.swift */; };
-		CB9E94071DDC930A00F643E0 /* CityTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB9E94061DDC930A00F643E0 /* CityTableViewCell.swift */; };
 		CB9E940A1DDCB5A000F643E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB9E94081DDCB5A000F643E0 /* Main.storyboard */; };
 		CBCC1AD81DE85C6000D1A982 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC1AD71DE85C6000D1A982 /* MapViewController.swift */; };
 		CBCC1ADA1DE88CB900D1A982 /* CustomAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCC1AD91DE88CB900D1A982 /* CustomAnnotation.swift */; };
@@ -55,7 +54,6 @@
 		CB98DDE51DDB4CE100C80E27 /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		CB98DDE71DDB4E1200C80E27 /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		CB98DDE91DDB535800C80E27 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
-		CB9E94061DDC930A00F643E0 /* CityTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityTableViewCell.swift; sourceTree = "<group>"; };
 		CB9E94091DDCB5A000F643E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CBCC1AD71DE85C6000D1A982 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		CBCC1AD91DE88CB900D1A982 /* CustomAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAnnotation.swift; sourceTree = "<group>"; };
@@ -113,7 +111,6 @@
 				CB98DDE91DDB535800C80E27 /* City.swift */,
 				CB98DDE51DDB4CE100C80E27 /* TableViewController.swift */,
 				CB98DDC01DDB4A0E00C80E27 /* LaunchScreen.storyboard */,
-				CB9E94061DDC930A00F643E0 /* CityTableViewCell.swift */,
 				CB98DDE71DDB4E1200C80E27 /* DetailViewController.swift */,
 				CB9664D51DE44AD10069B12C /* OpenWeatherMap.swift */,
 				CB9E94081DDCB5A000F643E0 /* Main.storyboard */,
@@ -280,7 +277,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CB9E94071DDC930A00F643E0 /* CityTableViewCell.swift in Sources */,
 				CBCC1ADA1DE88CB900D1A982 /* CustomAnnotation.swift in Sources */,
 				CB98DDE81DDB4E1200C80E27 /* DetailViewController.swift in Sources */,
 				CB98DDB51DDB4A0E00C80E27 /* AppDelegate.swift in Sources */,

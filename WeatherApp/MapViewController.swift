@@ -64,9 +64,17 @@ class MapViewController: UIViewController {
 //MARK: MKMapViewDelegate
 extension MapViewController: MKMapViewDelegate {
     
+    //optimize memory
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.mapView.showsUserLocation = false
+        self.mapView.delegate = nil
+        self.mapView.removeFromSuperview()
+        self.mapView = nil
+    }
+    
     //gets call first time mapView is loading and each time mapView view changes
     func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        
         mRect = self.mapView.visibleMapRect
         
         //firstly remove annotations out of bounds, if dont the annotations will acumulate
@@ -87,7 +95,9 @@ extension MapViewController: MKMapViewDelegate {
         
         weather.getSations(bottomLeft.longitude, latitudeP1: bottomLeft.latitude, longitudeP2: topRight.longitude, latitudeP2: topRight.latitude)
         
+
     }
+    
     
     //to be able to have custom pin color
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
@@ -140,8 +150,11 @@ extension MapViewController: OpenWeatherMapStationsDelegate {
         
         let stationsCount = stations["cnt"] as! Int
         let stationsList = stations["list"] as! [[String: AnyObject]]
+        //dont load too much stations in the map
+        let maxNewStations = 8
+        let step = stationsCount/maxNewStations + 1
         
-        for i in 0..<stationsCount {
+        for i in 0.stride(to: stationsCount, by: step) {
             let lon = stationsList[i]["coord"]!["lon"] as! Double
             let lat = stationsList[i]["coord"]!["lat"] as! Double
             let name = stationsList[i]["name"] as! String
@@ -172,7 +185,7 @@ extension MapViewController: OpenWeatherMapStationsDelegate {
             }
             
         }
-        
+
     }
     
     func didNotGetStations(error: NSError) {

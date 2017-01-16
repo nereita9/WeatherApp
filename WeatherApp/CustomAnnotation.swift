@@ -1,5 +1,5 @@
 //
-//  ColorPointAnnotation.swift
+//  CustomAnnotation.swift
 //  WeatherApp
 //
 //  Created by Nerea Gonzalez Vazquez on 25/11/16.

@@ -252,7 +252,7 @@ class TableViewController: UITableViewController{
                 
                 //Ipad portrait
                 if ( (UIDevice.currentDevice().userInterfaceIdiom == .Pad) && (UIDevice.currentDevice().orientation == .Portrait || UIDevice.currentDevice().orientation == .PortraitUpsideDown)){
-                    //Hide master view (table view) when clicking. In i
+                    //Hide master view (table view) when clicking in
                     UIView.animateWithDuration(0.3, animations: {
                         self.splitViewController?.preferredDisplayMode = .PrimaryHidden
                         }, completion: { finished in

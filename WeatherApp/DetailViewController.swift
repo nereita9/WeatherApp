@@ -173,8 +173,8 @@ class DetailViewController: UIViewController{
         let year = dateFormatter.stringFromDate(dateTime)
 
         
-        self.timeLabel.text = "\(hour):\(minute)"
-        self.dateLabel.text = "\(weekDay) \(day) \(month) \(year)"
+        self.timeLabel.text = "\(hour):\(minute)".capitalizedString
+        self.dateLabel.text = "\(weekDay) \(day) \(month) \(year)".capitalizedString
         
         
        
